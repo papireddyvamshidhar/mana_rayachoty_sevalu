@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37940848653",
+    "project_id": "mana-rayachoty-sevalu",
+    "storage_bucket": "mana-rayachoty-sevalu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37940848653:android:09407b5fb7fac1635bcd44",
+        "android_client_info": {
+          "package_name": "com.rayachoty.sevalu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX3vpLSZEwC2ndL3lzKD7DNBpmV3Php60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
