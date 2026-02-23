@@ -45,8 +45,39 @@ class Listing {
     this.timestamp,
   });
 
+  // HELPER METHOD: Returns main highlight based on category and current language
+  String getHighlightedTitle(String language) {
+    bool isEng = language == "English";
+
+    switch (category) {
+      case "Farmers":
+        return isEng ? f3En : f3Te;
+      case "Shops":
+        return isEng ? f1En : f1Te;
+      case "Services":
+        return isEng ? f1En : f1Te;
+      case "Jobs":
+        return isEng ? f1En : f1Te;
+      case "Hospitals":
+        return isEng ? f1En : f1Te;
+      case "Emergency":
+        return isEng ? f1En : f1Te;
+      case "Schools":
+        return isEng ? f1En : f1Te;
+      case "Hotels":
+        return isEng ? f1En : f1Te;
+      case "Old Goods":
+        return isEng ? f1En : f1Te;
+      case "House Rent":
+        return isEng ? f1En : f1Te;
+      case "Vehicle Rentals":
+        return isEng ? f1En : f1Te;
+      default:
+        return isEng ? f1En : f1Te;
+    }
+  }
+
   factory Listing.fromFirestore(Map<String, dynamic>? data, String id) {
-    // Handling null data case safely
     final Map<String, dynamic> doc = data ?? {};
 
     return Listing(

@@ -120,7 +120,8 @@ Map<String, List<String>> categoryLabels = {
   ]
 };
 
-Map<String, List<String>> categoryHints = {
+// Hints mapping for English and Telugu
+Map<String, List<String>> categoryHintsEn = {
   "Farmers": [
     "Ex: Ramesh",
     "Ex: 9876543210",
@@ -222,6 +223,213 @@ Map<String, List<String>> categoryHints = {
   ]
 };
 
+Map<String, List<String>> categoryHintsTe = {
+  "Farmers": [
+    "ఉదా: రమేష్",
+    "ఉదా: 9876543210",
+    "ఉదా: టమోటా",
+    "ఉదా: 100 కేజీలు",
+    "ఉదా: ₹20 ప్రతి కేజీ",
+    "ఉదా: రాయచోటి",
+    "ఉదా: తాజా కూరగాయలు అందుబాటులో ఉన్నాయి"
+  ],
+  "Shops": [
+    "ఉదా: శ్రీ లక్ష్మి స్టోర్స్",
+    "ఉదా: 9876543210",
+    "ఉదా: వెంకటేష్",
+    "ఉదా: కిరాణా",
+    "ఉదా: ఉదయం 9 - రాత్రి 9",
+    "ఉదా: రాయచోటి",
+    "ఉదా: అన్ని నిత్యావసరాలు లభిస్తాయి"
+  ],
+  "Services": [
+    "ఉదా: ఎలక్ట్రీషియన్",
+    "ఉదా: 9876543210",
+    "ఉదా: రాజు",
+    "ఉదా: 5 ఏళ్లు",
+    "ఉదా: ₹500 ఫీజు",
+    "ఉదా: రాయచోటి",
+    "ఉదా: ఇంటి వద్దకే సర్వీస్"
+  ],
+  "Jobs": [
+    "ఉదా: సేల్స్ ఎగ్జిక్యూటివ్",
+    "ఉదా: 9876543210",
+    "ఉదా: ABC కంపెనీ",
+    "ఉదా: నెలకు ₹15000",
+    "ఉదా: డిగ్రీ",
+    "ఉదా: రాయచోటి",
+    "ఉదా: వెంటనే చేరాలి"
+  ],
+  "Hospitals": [
+    "ఉదా: సిటీ హాస్పిటల్",
+    "ఉదా: 9876543210",
+    "ఉదా: డాక్టర్ కుమార్",
+    "ఉదా: కార్డియాలజీ",
+    "ఉదా: ఉదయం 9 - సాయంత్రం 6",
+    "ఉదా: రాయచోటి",
+    "ఉదా: 24/7 అత్యవసర సేవలు"
+  ],
+  "Emergency": [
+    "ఉదా: అంబులెన్స్ సేవ",
+    "ఉదా: 9876543210",
+    "ఉదా: రవి",
+    "ఉదా: 24/7",
+    "ఉదా: మెడికల్",
+    "ఉదా: రాయచోటి",
+    "ఉదా: వేగవంతమైన స్పందన"
+  ],
+  "Schools": [
+    "ఉదా: అర్చన స్కూల్",
+    "ఉదా: 9876543210",
+    "ఉదా: మిస్టర్ రెడ్డి",
+    "ఉదా: 1-10 తరగతులు",
+    "ఉదా: ₹5000 ఫీజు",
+    "ఉదా: రాయచోటి",
+    "ఉదా: ఇంగ్లీష్ మీడియం పాఠశాల"
+  ],
+  "Hotels": [
+    "ఉదా: శ్రీ బాలాజీ హోటల్",
+    "ఉదా: 9876543210",
+    "ఉదా: వెజ్ / నాన్-వెజ్",
+    "ఉదా: నెలకు ₹150",
+    "ఉదా: హోమ్ డెలివరీ కలదు",
+    "ఉదా: రాయచోటి",
+    "ఉదా: ఫ్యామిలీ రెస్టారెంట్"
+  ],
+  "Old Goods": [
+    "ఉదా: పాత బైక్",
+    "ఉదా: 9876543210",
+    "ఉదా: వంశీ",
+    "ఉదా: మంచి స్థితి",
+    "ఉదా: ₹25000",
+    "ఉదా: రాయచోటి",
+    "ఉదా: బాగా నిర్వహించబడిన వాహనం"
+  ],
+  "House Rent": [
+    "ఉదా: రాజు",
+    "ఉదా: 9876543210",
+    "ఉదా: 2BHK",
+    "ఉదా: ₹8000 అద్దె",
+    "ఉదా: ₹20000 అడ్వాన్స్",
+    "ఉదా: రాయచోటి",
+    "ఉదా: బస్టాండ్ దగ్గర"
+  ],
+  "Vehicle Rentals": [
+    "ఉదా: స్విఫ్ట్ కారు",
+    "ఉదా: 9876543210",
+    "ఉదా: శ్రీనివాస్",
+    "ఉదా: 2022 మోడల్",
+    "ఉదా: రోజుకు ₹2000",
+    "ఉదా: రాయచోటి",
+    "ఉదా: డ్రైవర్ అందుబాటులో ఉన్నారు"
+  ]
+};
+
+// Emoji Auto Detection Function - Fully Fixed with Farmers and House Rent corrections
+String getEmojiForTitle(String title, String category) {
+  String t = title.toLowerCase();
+
+  // Category Specific Matches
+  if (category == "Farmers") {
+    if (t.contains("brinjal") || t.contains("వంకాయ")) return "🍆";
+    if (t.contains("cauliflower") || t.contains("కాలిఫ్లవర్")) return "🥦";
+    if (t.contains("cabbage") || t.contains("క్యాబేజీ")) return "🥬";
+    if (t.contains("potato") || t.contains("బంగాళదుంప")) return "🥔";
+    if (t.contains("groundnut") ||
+        t.contains("verusenaga") ||
+        t.contains("వేరుసెనగ")) return "🥜";
+    if (t.contains("tomato") || t.contains("టమోటా")) return "🍅";
+    if (t.contains("chilli") || t.contains("మిర్చి")) return "🌶️";
+    if (t.contains("onion") || t.contains("ఉల్లిపాయ")) return "🧅";
+    if (t.contains("carrot") || t.contains("క్యారెట్")) return "🥕";
+    if (t.contains("apple") || t.contains("ఆపిల్")) return "🍎";
+    if (t.contains("banana") || t.contains("అరటి")) return "🍌";
+    if (t.contains("vegetable") || t.contains("కూరగాయ")) return "🥦";
+    if (t.contains("fruit") || t.contains("పండు")) return "🍎";
+    if (t.contains("rice") || t.contains("బియ్యం")) return "🍚";
+    return "🌾";
+  }
+
+  if (category == "House Rent") {
+    if (t.contains("2bhk") || t.contains("3bhk") || t.contains("1bhk"))
+      return "🏠";
+    if (t.contains("apartment") || t.contains("అపార్ట్‌మెంట్")) return "🏢";
+    if (t.contains("ground floor") || t.contains("గ్రౌండ్ ఫ్లోర్"))
+      return "🏘️";
+    if (t.contains("independent") || t.contains("ఇండిపెండెంట్")) return "🏡";
+    return "🏠";
+  }
+
+  if (category == "Old Goods") {
+    if (t.contains("fridge") || t.contains("ఫ్రిజ్")) return "🧊";
+    if (t.contains("tv") || t.contains("టీవీ")) return "📺";
+    if (t.contains("bike") || t.contains("బైక్")) return "🏍️";
+    if (t.contains("car") || t.contains("కారు")) return "🚗";
+    if (t.contains("sofa") || t.contains("సోఫా")) return "🛋️";
+    if (t.contains("bed") || t.contains("మంచం")) return "🛏️";
+    if (t.contains("laptop") || t.contains("ల్యాప్టాప్")) return "💻";
+    if (t.contains("mobile") || t.contains("ఫోన్")) return "📱";
+    if (t.contains("washing machine")) return "🧺";
+    return "♻️";
+  }
+
+  if (category == "Vehicle Rentals") {
+    if (t.contains("car") || t.contains("కారు")) return "🚗";
+    if (t.contains("bike") || t.contains("బైక్")) return "🏍️";
+    if (t.contains("auto") || t.contains("ఆటో")) return "🛺";
+    if (t.contains("bus") || t.contains("బస్")) return "🚌";
+    if (t.contains("tractor") || t.contains("ట్రాక్టర్")) return "🚜";
+    return "🚘";
+  }
+
+  if (category == "Services") {
+    if (t.contains("plumber") || t.contains("ప్లంబర్")) return "🔧";
+    if (t.contains("electrician") || t.contains("ఎలక్ట్రిషియన్")) return "⚡";
+    if (t.contains("mechanic") || t.contains("మెకానిక్")) return "🛠️";
+    if (t.contains("driver") || t.contains("డ్రైవర్")) return "🚗";
+    if (t.contains("cleaning") || t.contains("క్లీనింగ్")) return "🧹";
+    if (t.contains("painter") || t.contains("పెయింటర్")) return "🎨";
+    if (t.contains("tailor") || t.contains("దర్జీ")) return "🧵";
+    return "🛠️";
+  }
+
+  if (category == "Shops") {
+    if (t.contains("grocery") || t.contains("కిరాణా")) return "🛒";
+    if (t.contains("medical") || t.contains("మెడికల్")) return "💊";
+    if (t.contains("bakery") || t.contains("బేకరీ")) return "🥖";
+    if (t.contains("electronics")) return "🔌";
+    if (t.contains("clothes")) return "👕";
+    if (t.contains("vegetable shop")) return "🥦";
+    return "🏬";
+  }
+
+  if (category == "Hospitals") return "🏥";
+  if (category == "Schools") return "🏫";
+
+  if (category == "Emergency") {
+    if (t.contains("ambulance") || t.contains("అంబులెన్స్")) return "🚑";
+    if (t.contains("police") || t.contains("పోలీస్")) return "🚓";
+    if (t.contains("fire") || t.contains("ఫైర్")) return "🚒";
+    return "🚨";
+  }
+
+  if (category == "Hotels") {
+    if (t.contains("hotel") || t.contains("హోటల్")) return "🏨";
+    if (t.contains("veg") && !t.contains("non")) return "🥗";
+    if (t.contains("non veg") || t.contains("nonveg")) return "🍗";
+    return "🍽️";
+  }
+
+  if (category == "Jobs") {
+    if (t.contains("software")) return "💻";
+    if (t.contains("sales")) return "🛍️";
+    if (t.contains("teacher")) return "👩‍🏫";
+    return "💼";
+  }
+
+  return "";
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -231,6 +439,9 @@ void main() async {
   );
 
   await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  currentLanguage = prefs.getString('selected_language') ?? "Telugu";
 
   runApp(const RayachotySevaluApp());
 }
@@ -279,6 +490,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  // Reordered categories per instructions
   final List<Map<String, dynamic>> categories = const [
     {
       "title": "Farmers",
@@ -289,11 +501,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       "iconColor": Colors.green
     },
     {
-      "title": "Shops",
-      "telugu": "దుకాణాలు",
-      "icon": Icons.store,
-      "color": Color(0xFFFFF3E0),
-      "iconColor": Colors.orange
+      "title": "Old Goods",
+      "telugu": "పాాత వస్తువులు",
+      "icon": Icons.recycling,
+      "color": Color(0xFFEFEBE9),
+      "iconColor": Colors.brown
+    },
+    {
+      "title": "House Rent",
+      "telugu": "ఇల్లు అద్దె",
+      "icon": Icons.home,
+      "color": Color(0xFFF1F8E9),
+      "iconColor": Colors.lightGreen
     },
     {
       "title": "Services",
@@ -301,6 +520,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       "icon": Icons.build,
       "color": Color(0xFFE3F2FD),
       "iconColor": Colors.blue
+    },
+    {
+      "title": "Vehicle Rentals",
+      "telugu": "వాహనాలు",
+      "icon": Icons.directions_car,
+      "color": Color(0xFFE8EAF6),
+      "iconColor": Colors.indigo
+    },
+    {
+      "title": "Shops",
+      "telugu": "దుకాణాలు",
+      "icon": Icons.store,
+      "color": Color(0xFFFFF3E0),
+      "iconColor": Colors.orange
     },
     {
       "title": "Jobs",
@@ -336,27 +569,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       "icon": Icons.restaurant,
       "color": Color(0xFFFCE4EC),
       "iconColor": Colors.pink
-    },
-    {
-      "title": "Old Goods",
-      "telugu": "పాాత వస్తువులు",
-      "icon": Icons.recycling,
-      "color": Color(0xFFEFEBE9),
-      "iconColor": Colors.brown
-    },
-    {
-      "title": "House Rent",
-      "telugu": "ఇల్లు అద్దె",
-      "icon": Icons.home,
-      "color": Color(0xFFF1F8E9),
-      "iconColor": Colors.lightGreen
-    },
-    {
-      "title": "Vehicle Rentals",
-      "telugu": "వాహనాలు",
-      "icon": Icons.directions_car,
-      "color": Color(0xFFE8EAF6),
-      "iconColor": Colors.indigo
     },
   ];
 
@@ -418,11 +630,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(isEng ? "Mana" : "మన",
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400)),
             Text(isEng ? "Rayachoty Sevalu" : "రాయచోటి సేవలు",
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 20)),
+                    fontSize: 22)),
             const SizedBox(height: 6),
             Text(
                 isEng
@@ -473,61 +690,139 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ChoiceChip(
-                      label: Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: const Text("English"),
+          if (!isAdminLoggedIn)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ChoiceChip(
+                          side: isEng
+                              ? const BorderSide(
+                                  color: Color(0xFF673AB7), width: 2)
+                              : BorderSide.none,
+                          label: Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            child: Text("English",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: isEng
+                                        ? FontWeight.bold
+                                        : FontWeight.normal)),
+                          ),
+                          selected: isEng,
+                          onSelected: (v) async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString(
+                                'selected_language', "English");
+                            setState(() => currentLanguage = "English");
+                          },
                         ),
                       ),
-                      selected: isEng,
-                      onSelected: (v) =>
-                          setState(() => currentLanguage = "English")),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) => const AddListingPage())),
-                    icon: const Icon(Icons.add),
-                    label: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(isEng ? "Register" : "నమోదు"),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF673AB7),
-                        foregroundColor: Colors.white),
+                      const SizedBox(width: 8),
+                      Tooltip(
+                        message: isEng
+                            ? "My Services (View & Delete your posted services)"
+                            : "నా సేవలు (మీరు పోస్ట్ చేసిన సేవలు చూడండి / తొలగించండి)",
+                        child: IconButton(
+                          icon: const Icon(Icons.person,
+                              color: Color(0xFF03A9F4)),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const MyListingsPage()),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ChoiceChip(
+                          side: !isEng
+                              ? const BorderSide(
+                                  color: Color(0xFF673AB7), width: 2)
+                              : BorderSide.none,
+                          label: Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            child: Text("తెలుగు",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: !isEng
+                                        ? FontWeight.bold
+                                        : FontWeight.normal)),
+                          ),
+                          selected: !isEng,
+                          onSelected: (v) async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString(
+                                'selected_language', "Telugu");
+                            setState(() => currentLanguage = "Telugu");
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isEng
+                        ? "Press above button to change language"
+                        : "భాష మార్చడానికి పై బటన్ నొక్కండి",
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          // Increased Add Service Button
+          if (!isAdminLoggedIn)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 85,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (c) => const AddListingPage())),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF673AB7),
+                      foregroundColor: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.add, size: 28),
+                          const SizedBox(width: 8),
+                          Text(
+                            isEng ? "Add Your Service" : "మీ సేవను జోడించండి",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        isEng ? "Click Here" : "ఇక్కడ క్లిక్ చేయండి",
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.white70),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ChoiceChip(
-                      label: Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: const Text("తెలుగు"),
-                        ),
-                      ),
-                      selected: !isEng,
-                      onSelected: (v) =>
-                          setState(() => currentLanguage = "Telugu")),
-                ),
-              ],
+              ),
             ),
-          ),
           if (isAdminLoggedIn)
             Container(
               color: Colors.red.shade50,
@@ -560,12 +855,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               itemCount: categories.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  mainAxisSpacing: 12, // Reduced vertical spacing
                   childAspectRatio: 1.1),
               itemBuilder: (context, index) {
                 final cat = categories[index];
@@ -584,10 +879,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         cat["isEmoji"] == true
                             ? Text(cat["emoji"],
-                                style: const TextStyle(fontSize: 45))
+                                style: const TextStyle(
+                                    fontSize: 36)) // Reduced icon size by ~20%
                             : Icon(cat["icon"],
-                                size: 45, color: cat["iconColor"]),
-                        Text(isEng ? cat["title"] : cat["telugu"],
+                                size: 36,
+                                color: cat[
+                                    "iconColor"]), // Reduced icon size by ~20%
+                        Text(
+                            isAdminLoggedIn
+                                ? cat["title"]
+                                : (isEng ? cat["title"] : cat["telugu"]),
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                       ],
@@ -612,6 +913,7 @@ class AddListingPage extends StatefulWidget {
 class _AddListingPageState extends State<AddListingPage> {
   final _formKey = GlobalKey<FormState>();
   String selectedCat = "Farmers";
+  bool isSubmitting = false;
 
   final Map<String, TextEditingController> controllers = {
     'f1': TextEditingController(),
@@ -636,8 +938,15 @@ class _AddListingPageState extends State<AddListingPage> {
 
   String? _validateField(String label, String value) {
     if (value.trim().isEmpty) return "This field is required";
-    if (label.toLowerCase().contains("phone") && value.length != 10)
-      return "Enter valid 10 digit mobile number";
+
+    // Emergency Phone Validation Fix
+    if (label.toLowerCase().contains("phone")) {
+      if (selectedCat == "Emergency") {
+        if (value.length < 3) return "Enter valid number";
+      } else {
+        if (value.length != 10) return "Enter valid 10 digit mobile number";
+      }
+    }
     return null;
   }
 
@@ -785,80 +1094,87 @@ class _AddListingPageState extends State<AddListingPage> {
     }
   }
 
+  String _capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   void _submit() async {
+    if (isSubmitting) return;
     if (!_formKey.currentState!.validate()) return;
+
+    setState(() => isSubmitting = true);
     bool isEng = currentLanguage == "English";
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String devId = prefs.getString('user_device_id') ??
-        DateTime.now().millisecondsSinceEpoch.toString();
-    await prefs.setString('user_device_id', devId);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String devId = prefs.getString('user_device_id') ??
+          DateTime.now().millisecondsSinceEpoch.toString();
+      await prefs.setString('user_device_id', devId);
 
-    Map<String, String> fieldsToTranslate = {
-      'f1': controllers['f1']!.text.trim(),
-      'f2': controllers['f2']!.text.trim(),
-      'f3': controllers['f3']!.text.trim(),
-      'f4': controllers['f4']!.text.trim(),
-      'f5': controllers['f5']!.text.trim(),
-      'f6': controllers['f6']!.text.trim(),
-      'desc': controllers['desc']!.text.trim(),
-    };
+      Map<String, String> fieldsToTranslate = {
+        'f1': _capitalize(controllers['f1']!.text.trim()),
+        'f2': controllers['f2']!.text.trim(),
+        'f3': _capitalize(controllers['f3']!.text.trim()),
+        'f4': _capitalize(controllers['f4']!.text.trim()),
+        'f5': controllers['f5']!.text.trim(),
+        'f6': _capitalize(controllers['f6']!.text.trim()),
+        'desc': _capitalize(controllers['desc']!.text.trim()),
+      };
 
-    Map<String, String> translated =
-        await translationService.translateAllFields(fieldsToTranslate, isEng);
+      Map<String, String> translated =
+          await translationService.translateAllFields(fieldsToTranslate, isEng);
 
-    Listing newListing = Listing(
-      id: '',
-      category: selectedCat,
-      ownerId: devId,
-      f1En: translated['f1_en']!,
-      f1Te: translated['f1_te']!,
-      f2En: translated['f2_en']!,
-      f2Te: translated['f2_te']!,
-      f3En: translated['f3_en']!,
-      f3Te: translated['f3_te']!,
-      f4En: translated['f4_en']!,
-      f4Te: translated['f4_te']!,
-      f5En: translated['f5_en']!,
-      f5Te: translated['f5_te']!,
-      f6En: translated['f6_en']!,
-      f6Te: translated['f6_te']!,
-      descEn: translated['desc_en']!,
-      descTe: translated['desc_te']!,
-    );
+      Listing newListing = Listing(
+        id: '',
+        category: selectedCat,
+        ownerId: devId,
+        f1En: translated['f1_en']!,
+        f1Te: translated['f1_te']!,
+        f2En: translated['f2_en']!,
+        f2Te: translated['f2_te']!,
+        f3En: translated['f3_en']!,
+        f3Te: translated['f3_te']!,
+        f4En: translated['f4_en']!,
+        f4Te: translated['f4_te']!,
+        f5En: translated['f5_en']!,
+        f5Te: translated['f5_te']!,
+        f6En: translated['f6_en']!,
+        f6Te: translated['f6_te']!,
+        descEn: translated['desc_en']!,
+        descTe: translated['desc_te']!,
+      );
 
-    await firebaseService.addListing(newListing);
-    if (!mounted) return;
+      await firebaseService.addListing(newListing);
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        title: Icon(Icons.check_circle, color: Colors.green, size: 50),
-        content: Text(
-          isEng
-              ? "Registration Successful! Your listing will be visible after admin approval."
-              : "నమోదు విజయవంతమైంది! అడ్మిన్ ఆమోదం తర్వాత మీ వివరాలు కనిపిస్తాయి.",
-          textAlign: TextAlign.center,
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isEng
+              ? "Successful! Waiting for admin approval."
+              : "విజయవంతమైంది! అడ్మిన్ ఆమోదం కోసం వేచి ఉంది."),
+          backgroundColor: Colors.green,
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pop(context);
-            },
-            child: Text("OK"),
-          )
-        ],
-      ),
-    );
+      );
+
+      // Automatic navigate to home
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      setState(() => isSubmitting = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     bool isEng = currentLanguage == "English";
     List<String> labels = _getLabels(selectedCat, isEng);
-    List<String> dynamicHints = categoryHints[selectedCat] ?? [];
+    // Logic to select hints based on language
+    List<String> dynamicHints = isEng
+        ? (categoryHintsEn[selectedCat] ?? [])
+        : (categoryHintsTe[selectedCat] ?? []);
 
     return Scaffold(
       appBar: AppBar(title: Text(isEng ? "Register" : "నమోదు")),
@@ -912,13 +1228,16 @@ class _AddListingPageState extends State<AddListingPage> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: _submit,
+                onPressed: isSubmitting ? null : _submit,
                 style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     minimumSize: const Size(double.infinity, 50),
                     backgroundColor: const Color(0xFF673AB7)),
-                child: Text(isEng ? "SUBMIT" : "సమర్పించండి",
-                    style: const TextStyle(color: Colors.white, fontSize: 16)),
+                child: isSubmitting
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(isEng ? "SUBMIT" : "సమర్పించండి",
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ],
           ),
@@ -939,7 +1258,6 @@ class ListingPage extends StatefulWidget {
 class _ListingPageState extends State<ListingPage> {
   String search = "";
   String myDeviceId = "";
-  String sortBy = "Latest";
 
   @override
   void initState() {
@@ -964,32 +1282,14 @@ class _ListingPageState extends State<ListingPage> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    onChanged: (v) => setState(() => search = v.toLowerCase()),
-                    decoration: InputDecoration(
-                      hintText: isEng ? "Search..." : "వెతకండి...",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: sortBy,
-                  underline: const SizedBox(),
-                  onChanged: (v) => setState(() => sortBy = v!),
-                  items: ["Latest", "Oldest", "Pinned", "A-Z"]
-                      .map((s) => DropdownMenuItem(
-                            value: s,
-                            child:
-                                Text(s, style: const TextStyle(fontSize: 12)),
-                          ))
-                      .toList(),
-                ),
-              ],
+            child: TextField(
+              onChanged: (v) => setState(() => search = v.toLowerCase()),
+              decoration: InputDecoration(
+                hintText: isEng ? "Search..." : "వెతకండి...",
+                prefixIcon: const Icon(Icons.search),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              ),
             ),
           ),
           Expanded(
@@ -1007,23 +1307,17 @@ class _ListingPageState extends State<ListingPage> {
                       f2.toLowerCase().contains(search);
                 }).toList();
 
-                if (sortBy == "Latest") {
-                  listings.sort((a, b) =>
-                      (b.timestamp as Timestamp?)?.compareTo(
-                          a.timestamp as Timestamp? ?? Timestamp.now()) ??
-                      0);
-                } else if (sortBy == "Oldest") {
-                  listings.sort((a, b) =>
-                      (a.timestamp as Timestamp?)?.compareTo(
-                          b.timestamp as Timestamp? ?? Timestamp.now()) ??
-                      0);
-                } else if (sortBy == "Pinned") {
-                  listings.sort((a, b) =>
-                      (b.isPinned ? 1 : 0).compareTo(a.isPinned ? 1 : 0));
-                } else if (sortBy == "A-Z") {
-                  listings.sort((a, b) => (isEng ? a.f1En : a.f1Te)
-                      .compareTo(isEng ? b.f1En : b.f1Te));
-                }
+                listings.sort((a, b) {
+                  if (a.isPinned && !b.isPinned) return -1;
+                  if (!a.isPinned && b.isPinned) return 1;
+
+                  final aTime = a.timestamp as Timestamp?;
+                  final bTime = b.timestamp as Timestamp?;
+
+                  if (aTime == null || bTime == null) return 0;
+
+                  return bTime.compareTo(aTime);
+                });
 
                 if (listings.isEmpty) {
                   return Center(
@@ -1038,118 +1332,238 @@ class _ListingPageState extends State<ListingPage> {
                     bool canDelete =
                         isAdminLoggedIn || (l.ownerId == myDeviceId);
 
-                    String f1 = isEng ? l.f1En : l.f1Te;
-                    String f2 = isEng ? l.f2En : l.f2Te;
-                    String f3 = isEng ? l.f3En : l.f3Te;
-                    String f4 = isEng ? l.f4En : l.f4Te;
-                    String f5 = isEng ? l.f5En : l.f5Te;
-                    String f6 = isEng ? l.f6En : l.f6Te;
-                    String desc = isEng ? l.descEn : l.descTe;
+                    String titleText = l.getHighlightedTitle(currentLanguage);
 
-                    List<String> labels = categoryLabels[l.category] ?? [];
-                    List<String> values = [f1, f2, f3, f4, f5, f6];
+                    // HOUSE RENT UI FIX
+                    if (l.category == "House Rent") {
+                      titleText =
+                          isEng ? l.f3En : l.f3Te; // House Type as title
+                    }
+
+                    String emoji = getEmojiForTitle(titleText, l.category);
+
+                    Widget cardSubtitle;
+
+                    if (l.category == "Farmers") {
+                      String price = isEng ? l.f5En : l.f5Te;
+                      if (!price.toLowerCase().contains("per kg") &&
+                          !price.toLowerCase().contains("ప్రతి కేజీ")) {
+                        price += isEng ? " per kg" : " ప్రతి కేజీ";
+                      }
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f1En : l.f1Te),
+                          Text(isEng ? l.f6En : l.f6Te),
+                          Text(price,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green)),
+                        ],
+                      );
+                    } else if (l.category == "Old Goods") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f3En : l.f3Te),
+                          Text(isEng ? l.f6En : l.f6Te),
+                          Text(isEng ? l.f5En : l.f5Te,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      );
+                    } else if (l.category == "House Rent") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f1En : l.f1Te), // Owner name below
+                          Text(isEng ? l.f6En : l.f6Te),
+                          Text(isEng ? l.f4En : l.f4Te,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      );
+                    } else if (l.category == "Vehicle Rentals") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f6En : l.f6Te),
+                          Text(isEng ? l.f5En : l.f5Te,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      );
+                    } else if (l.category == "Services") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f3En : l.f3Te),
+                          Text(isEng ? l.f6En : l.f6Te),
+                          if ((isEng ? l.f5En : l.f5Te).isNotEmpty)
+                            Text(isEng ? l.f5En : l.f5Te,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                        ],
+                      );
+                    } else if (l.category == "Jobs") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f3En : l.f3Te),
+                          Text(isEng ? l.f6En : l.f6Te),
+                          if ((isEng ? l.f4En : l.f4Te).isNotEmpty)
+                            Text(isEng ? l.f4En : l.f4Te,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)),
+                        ],
+                      );
+                    } else if (l.category == "Hotels") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f3En : l.f3Te,
+                              style: const TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold)),
+                          Text(isEng ? l.f6En : l.f6Te),
+                        ],
+                      );
+                    } else if (l.category == "Hospitals") {
+                      // HOSPITAL DUPLICATE FIX
+                      bool showDoctor = (l.f3En.trim().toLowerCase() !=
+                              l.f1En.trim().toLowerCase()) &&
+                          (l.f3Te.trim() != l.f1Te.trim());
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (showDoctor) Text(isEng ? l.f3En : l.f3Te),
+                          Text(isEng ? l.f4En : l.f4Te,
+                              style:
+                                  const TextStyle(fontStyle: FontStyle.italic)),
+                          Text(isEng ? l.f6En : l.f6Te),
+                        ],
+                      );
+                    } else if (l.category == "Schools") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f4En : l.f4Te,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(isEng ? l.f6En : l.f6Te),
+                        ],
+                      );
+                    } else if (l.category == "Emergency") {
+                      cardSubtitle = Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isEng ? l.f3En : l.f3Te),
+                          Text(isEng ? l.f6En : l.f6Te),
+                          if ((isEng ? l.f4En : l.f4Te).isNotEmpty &&
+                              !(isEng ? l.f4En : l.f4Te).contains("24/7"))
+                            Text(isEng ? l.f4En : l.f4Te),
+                        ],
+                      );
+                    } else {
+                      cardSubtitle = Text(isEng ? l.f6En : l.f6Te);
+                    }
+
+                    // EMERGENCY 24/7 LOGIC
+                    bool isEmergency247 = l.category == "Emergency" &&
+                        (isEng ? l.f4En : l.f4Te).contains("24/7");
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      elevation: 2,
+                          horizontal: 12, vertical: 8),
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
                       color: l.isPinned ? Colors.yellow.shade50 : Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Stack(
+                        children: [
+                          ListTile(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => DetailPage(listing: l))),
+                            contentPadding: const EdgeInsets.all(16),
+                            title: Row(
                               children: [
+                                if (emoji.isNotEmpty)
+                                  Text("$emoji ",
+                                      style: const TextStyle(fontSize: 18)),
                                 Expanded(
-                                  child: Text(
-                                    f1,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Color(0xFF673AB7),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    if (canDelete)
-                                      IconButton(
-                                        icon: const Icon(Icons.delete,
-                                            color: Colors.red),
-                                        onPressed: () =>
-                                            firebaseService.deleteListing(l.id),
-                                      ),
-                                    if (isAdminLoggedIn)
-                                      IconButton(
-                                        icon: Icon(l.isPinned
-                                            ? Icons.push_pin
-                                            : Icons.push_pin_outlined),
-                                        onPressed: () => firebaseService
-                                            .togglePinned(l.id, !l.isPinned),
-                                      ),
-                                    IconButton(
-                                      icon: const Icon(Icons.call,
-                                          color: Colors.green),
-                                      onPressed: () =>
-                                          launchUrl(Uri.parse("tel:$f2")),
-                                    ),
-                                  ],
+                                  child: Text(titleText,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                          color: Color(0xFF673AB7))),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 6),
-                            for (int j = 1; j < 6; j++)
-                              if (j < labels.length && values[j].isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 3),
-                                  child: Text(
-                                    "${labels[j]}: ${values[j]}",
-                                    style: const TextStyle(fontSize: 14),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: cardSubtitle,
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (canDelete)
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () async {
+                                      bool? confirm = await showDialog(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                          title: const Text("Delete?"),
+                                          content: const Text("Are you sure?"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(ctx, false),
+                                                child: const Text("No")),
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(ctx, true),
+                                                child: const Text("Yes")),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await firebaseService
+                                            .deleteListing(l.id);
+                                        setState(() {});
+                                      }
+                                    },
                                   ),
-                                ),
-                            if (desc.isNotEmpty)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
-                                child: Text(
-                                  desc,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700),
-                                ),
+                                if (l.isPinned)
+                                  const Icon(Icons.push_pin,
+                                      size: 18, color: Colors.orange)
+                                else
+                                  const Icon(Icons.chevron_right),
+                              ],
+                            ),
+                          ),
+                          if (isEmergency247)
+                            Positioned(
+                              top: 8,
+                              right: 40,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: const Text("24/7",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold)),
                               ),
-                            const Divider(),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on,
-                                    size: 16, color: Colors.red),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    f6,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13),
-                                  ),
-                                ),
-                                Text(
-                                  l.timestamp != null
-                                      ? DateFormat('dd MMM').format(
-                                          (l.timestamp as Timestamp).toDate())
-                                      : "",
-                                  style: const TextStyle(
-                                      fontSize: 11, color: Colors.grey),
-                                ),
-                              ],
                             ),
-                          ],
-                        ),
+                        ],
                       ),
                     );
                   },
@@ -1158,6 +1572,145 @@ class _ListingPageState extends State<ListingPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MyListingsPage extends StatefulWidget {
+  const MyListingsPage({super.key});
+  @override
+  State<MyListingsPage> createState() => _MyListingsPageState();
+}
+
+class _MyListingsPageState extends State<MyListingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    bool isEng = currentLanguage == "English";
+    return Scaffold(
+      appBar: AppBar(title: Text(isEng ? "My Services" : "నా సేవలు")),
+      body: FutureBuilder<String>(
+        future: SharedPreferences.getInstance()
+            .then((p) => p.getString('user_device_id') ?? ""),
+        builder: (context, idSnap) {
+          if (!idSnap.hasData)
+            return const Center(child: CircularProgressIndicator());
+          return StreamBuilder<List<Listing>>(
+            stream: firebaseService.getMyListings(idSnap.data!),
+            builder: (context, snap) {
+              if (!snap.hasData)
+                return const Center(child: CircularProgressIndicator());
+              if (snap.data!.isEmpty)
+                return Center(
+                    child: Text(isEng
+                        ? "You haven't posted any services."
+                        : "మీరు ఎటువంటి సేవలను పోస్ట్ చేయలేదు."));
+              return ListView.builder(
+                itemCount: snap.data!.length,
+                itemBuilder: (context, i) {
+                  Listing l = snap.data![i];
+                  return Card(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: ListTile(
+                      title: Text(isEng ? l.f1En : l.f1Te),
+                      subtitle: Text(getCategory(l.category)),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          bool? confirm = await showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text("Delete?"),
+                              content: const Text("Are you sure?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text("No")),
+                                TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text("Yes")),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            await firebaseService.deleteListing(l.id);
+                            setState(() {});
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DetailPage extends StatelessWidget {
+  final Listing listing;
+  const DetailPage({super.key, required this.listing});
+  @override
+  Widget build(BuildContext context) {
+    bool isEng = currentLanguage == "English";
+    List<String> labels = categoryLabels[listing.category] ?? [];
+    String f1 = isEng ? listing.f1En : listing.f1Te;
+    String f2 = isEng ? listing.f2En : listing.f2Te;
+    String f3 = isEng ? listing.f3En : listing.f3Te;
+    String f4 = isEng ? listing.f4En : listing.f4Te;
+    String f5 = isEng ? listing.f5En : listing.f5Te;
+    String f6 = isEng ? listing.f6En : listing.f6Te;
+    String desc = isEng ? listing.descEn : listing.descTe;
+    List<String> values = [f1, f2, f3, f4, f5, f6];
+    return Scaffold(
+      appBar: AppBar(title: Text(isEng ? "Details" : "వివరాలు")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(f1,
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF673AB7))),
+            const Divider(height: 30),
+            for (int i = 1; i < labels.length; i++)
+              if (i < values.length && values[i].isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${labels[i]}: ",
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Expanded(child: Text(values[i])),
+                      ]),
+                ),
+            if (desc.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              const Text("Description:",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 5),
+              Text(desc, style: const TextStyle(fontSize: 15))
+            ],
+            const SizedBox(height: 40),
+            ElevatedButton.icon(
+              onPressed: () => launchUrl(Uri.parse("tel:$f2")),
+              icon: const Icon(Icons.call),
+              label: Text(isEng ? "CALL NOW" : "కాల్ చేయండి"),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 55)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1185,9 +1738,8 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
       'f6En': TextEditingController(text: l.f6En),
       'f6Te': TextEditingController(text: l.f6Te),
       'descEn': TextEditingController(text: l.descEn),
-      'descTe': TextEditingController(text: l.descTe),
+      'descTe': TextEditingController(text: l.descTe)
     };
-
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -1207,7 +1759,7 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
             _adminField(editCtrls['f6En']!, "Location (EN)"),
             _adminField(editCtrls['f6Te']!, "Location (TE)"),
             _adminField(editCtrls['descEn']!, "Desc (EN)", lines: 2),
-            _adminField(editCtrls['descTe']!, "Desc (TE)", lines: 2),
+            _adminField(editCtrls['descTe']!, "Desc (TE)", lines: 2)
           ]),
         ),
         actions: [
@@ -1229,13 +1781,13 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
                   'f6_en': editCtrls['f6En']!.text,
                   'f6_te': editCtrls['f6Te']!.text,
                   'desc_en': editCtrls['descEn']!.text,
-                  'desc_te': editCtrls['descTe']!.text,
+                  'desc_te': editCtrls['descTe']!.text
                 });
                 if (!mounted) return;
                 Navigator.pop(ctx);
                 setState(() {});
               },
-              child: const Text("SAVE")),
+              child: const Text("SAVE"))
         ],
       ),
     );
@@ -1244,18 +1796,16 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
   Widget _adminField(TextEditingController ctrl, String label,
       {int lines = 1}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(
-          controller: ctrl,
-          maxLines: lines,
-          decoration:
-              InputDecoration(labelText: label, border: OutlineInputBorder())),
-    );
+        padding: const EdgeInsets.only(bottom: 10),
+        child: TextField(
+            controller: ctrl,
+            maxLines: lines,
+            decoration: InputDecoration(
+                labelText: label, border: const OutlineInputBorder())));
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isEng = currentLanguage == "English";
     return Scaffold(
       appBar: AppBar(title: const Text("Admin Approvals")),
       body: FutureBuilder<List<Listing>>(
@@ -1264,55 +1814,62 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
           if (!snap.hasData)
             return const Center(child: CircularProgressIndicator());
           if (snap.data!.isEmpty)
-            return Center(child: Text("No pending approvals."));
+            return const Center(child: Text("No pending approvals."));
           return ListView.builder(
             itemCount: snap.data!.length,
             itemBuilder: (context, i) {
               Listing l = snap.data![i];
-              String f1 = isEng ? l.f1En : l.f1Te;
-              String f2 = isEng ? l.f2En : l.f2Te;
-              String f6 = isEng ? l.f6En : l.f6Te;
-              String cat = getCategory(l.category);
-
+              String f1 = l.f1En;
+              String f2 = l.f2En;
+              String f6 = l.f6En;
+              String cat = l.category;
               return Card(
                 margin: const EdgeInsets.all(12),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("CATEGORY: $cat",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.blue)),
-                      const SizedBox(height: 5),
-                      Text("Name: $f1"),
-                      Text("Phone: $f2"),
-                      Text("Location: $f6"),
-                      const Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => _showFullEdit(l)),
-                          IconButton(
-                              icon: const Icon(Icons.check_circle,
-                                  color: Colors.green, size: 30),
-                              onPressed: () async {
-                                await firebaseService.approveListing(l.id);
-                                setState(() {});
-                              }),
-                          IconButton(
-                              icon: const Icon(Icons.cancel,
-                                  color: Colors.red, size: 30),
-                              onPressed: () async {
-                                await firebaseService.deleteListing(l.id);
-                                setState(() {});
-                              }),
-                        ],
-                      ),
-                    ],
-                  ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("CATEGORY: $cat",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue)),
+                        const SizedBox(height: 5),
+                        Text("Name: $f1"),
+                        Text("Phone: $f2"),
+                        Text("Location: $f6"),
+                        const Divider(),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  icon: const Icon(Icons.push_pin,
+                                      color: Colors.orange),
+                                  onPressed: () async {
+                                    await firebaseService.togglePinned(
+                                        l.id, !l.isPinned);
+                                    setState(() {});
+                                  }),
+                              IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.blue),
+                                  onPressed: () => _showFullEdit(l)),
+                              IconButton(
+                                  icon: const Icon(Icons.check_circle,
+                                      color: Colors.green, size: 30),
+                                  onPressed: () async {
+                                    await firebaseService.approveListing(l.id);
+                                    setState(() {});
+                                  }),
+                              IconButton(
+                                  icon: const Icon(Icons.cancel,
+                                      color: Colors.red, size: 30),
+                                  onPressed: () async {
+                                    await firebaseService.deleteListing(l.id);
+                                    setState(() {});
+                                  }),
+                            ]),
+                      ]),
                 ),
               );
             },
@@ -1347,7 +1904,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           const SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50)),
+                minimumSize: const Size(double.infinity, 50)),
             onPressed: () async {
               var d = await FirebaseFirestore.instance
                   .collection('admin')
@@ -1360,8 +1917,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 if (!mounted) return;
                 Navigator.pop(context);
               } else {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Incorrect PIN")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Incorrect PIN")));
               }
             },
             child: const Text("LOGIN"),
