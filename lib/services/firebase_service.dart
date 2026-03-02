@@ -1,122 +1,192 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/listing_model.dart';
 
 class FirebaseService {
   final CollectionReference _db =
       FirebaseFirestore.instance.collection('listings');
-
-  // Flag to prevent multiple submissions within the same service instance
   bool _isSubmitting = false;
 
-  // Helper method for capitalization logic
   String _capitalize(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
   }
 
-  // MODIFIED: Uses Future<bool> to return status and ensures single write
+  // =========================================================
+  // 1. PRIMARY SUBMISSION (BILINGUAL + STRUCTURAL)
+  // =========================================================
   Future<bool> addListing(Listing listing) async {
-    // 1) Prevent multiple submission / Prevent double tap
     if (_isSubmitting) return false;
-
     try {
       _isSubmitting = true;
-
-      // Ensure we are working with a clean map and server-side timestamp
-      // 4) Implement bilingual save support: Save both _en and _te fields
-      // Apply capitalization to text fields before saving
-      Map<String, dynamic> data = {
-        'category': listing.category,
-        'ownerId': listing.ownerId,
-        'f1_en': _capitalize(listing.f1En),
-        'f1_te': _capitalize(listing.f1Te),
-        'f2_en': listing.f2En,
-        'f2_te': listing.f2Te,
-        'f3_en': _capitalize(listing.f3En),
-        'f3_te': _capitalize(listing.f3Te),
-        'f4_en': _capitalize(listing.f4En),
-        'f4_te': _capitalize(listing.f4Te),
-        'f5_en': listing.f5En,
-        'f5_te': listing.f5Te,
-        'f6_en': _capitalize(listing.f6En),
-        'f6_te': _capitalize(listing.f6Te),
-        'desc_en': _capitalize(listing.descEn),
-        'desc_te': _capitalize(listing.descTe),
-      };
-
-      // Force status to Pending for new submissions and set timestamp
-      data['status'] = 'Pending';
+      Map<String, dynamic> data = listing.toMap();
       data['timestamp'] = FieldValue.serverTimestamp();
-      data['isPinned'] = false;
 
-      // 2) Ensure only one Firestore write per submission (Single Document Addition)
-      // 1) Use proper async/await
-      DocumentReference docRef = await _db.add(data);
-
-      // 3) After success: Return true
-      return docRef.id.isNotEmpty;
+      DocumentReference dr = await _db.add(data);
+      return dr.id.isNotEmpty;
     } catch (e) {
-      // Log error if necessary and return false to UI
-      print("Firebase AddListing Error: $e");
+      debugPrint("AddListing Error: $e");
       return false;
     } finally {
-      // Reset flag so subsequent submissions are possible if needed
       _isSubmitting = false;
     }
   }
 
-  Future<void> updateListing(String id, Map<String, dynamic> data) async {
-    await _db.doc(id).update(data);
-  }
+  // =========================================================
+  // 2. RETRIEVAL (ROBUST VISIBILITY FIX)
+  // =========================================================
+  Stream<List<Listing>> getApprovedListings(String cat, {String? subCategory}) {
+    Query q = _db
+        .where('category', isEqualTo: cat)
+        .where('status', isEqualTo: 'approved')
+        .orderBy('timestamp', descending: true);
 
-  Stream<List<Listing>> getApprovedListings(String category) {
-    return _db
-        .where('category', isEqualTo: category)
-        .where('status', isEqualTo: 'Approved')
-        .orderBy('isPinned', descending: true)
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snap) => snap.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>?;
-              return Listing.fromFirestore(data, doc.id);
-            }).toList());
-  }
+    return q.snapshots().map((snap) {
+      return snap.docs
+          .map((doc) => Listing.fromFirestore(
+              doc.data() as Map<String, dynamic>?, doc.id))
+          .where((l) {
+        bool matchesSub = true;
+        if (subCategory != null &&
+            subCategory != "All" &&
+            subCategory != "అన్నీ") {
+          matchesSub =
+              (l.subCategory ?? "").toLowerCase() == subCategory.toLowerCase();
+        }
 
-  Future<void> deleteListing(String id) async {
-    await _db.doc(id).delete();
-  }
-
-  Future<void> approveListing(String id) async {
-    await _db.doc(id).update({'status': 'Approved'});
-  }
-
-  Future<void> togglePinned(String id, bool value) async {
-    await _db.doc(id).update({'isPinned': value});
-  }
-
-  Future<List<Listing>> getPendingListings() async {
-    QuerySnapshot snap = await _db.where('status', isEqualTo: 'Pending').get();
-    return snap.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>?;
-      return Listing.fromFirestore(data, doc.id);
-    }).toList();
-  }
-
-  Stream<int> getPendingCount() {
-    return _db
-        .where('status', isEqualTo: 'Pending')
-        .snapshots()
-        .map((s) => s.docs.length);
+        return matchesSub;
+      }).toList()
+        ..sort((a, b) {
+          if (a.isPinned == b.isPinned) return 0;
+          return a.isPinned ? -1 : 1;
+        });
+    });
   }
 
   Stream<List<Listing>> getMyListings(String deviceId) {
+    return _db.where('ownerId', isEqualTo: deviceId).snapshots().map((snap) =>
+        snap.docs
+            .map((doc) => Listing.fromFirestore(
+                doc.data() as Map<String, dynamic>?, doc.id))
+            .toList());
+  }
+
+  // =========================================================
+  // 3. ADMIN & HELPER METHODS (PRESERVED)
+  // =========================================================
+  Future<void> rejectListing(String id) async =>
+      await _db.doc(id).update({'status': 'rejected'});
+  Future<void> updateListing(String id, Map<String, dynamic> data) async =>
+      await _db.doc(id).update(data);
+
+  Future<void> deleteListing(String id) async => await _db.doc(id).delete();
+
+  Future<void> approveListing(String id) async =>
+      await _db.doc(id).update({'status': 'approved'});
+
+  Future<void> togglePinned(String id, bool value) async =>
+      await _db.doc(id).update({'isPinned': value});
+
+  Future<void> flagListing(String id) async =>
+      await _db.doc(id).update({'is_flagged': true});
+
+  Stream<int> getPendingCount() => _db
+      .where('status', isEqualTo: 'pending')
+      .snapshots()
+      .map((s) => s.docs.length);
+
+  // =========================================================
+  // 4. EMERGENCY & MOVIES (AUTO-SEEDING PRESERVED)
+  // =========================================================
+  Stream<List<Map<String, dynamic>>> getEmergencyServices() {
+    seedEmergencyDataIfEmpty();
     return FirebaseFirestore.instance
-        .collection('listings')
-        .where('ownerId', isEqualTo: deviceId)
+        .collection('emergency_services')
+        .orderBy('order')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>?;
-              return Listing.fromFirestore(data, doc.id);
+        .map((snap) => snap.docs.map((doc) {
+              final d = doc.data() as Map<String, dynamic>;
+              d['id'] = doc.id;
+              return d;
             }).toList());
+  }
+
+  Future<void> seedEmergencyDataIfEmpty() async {
+    final col = FirebaseFirestore.instance.collection('emergency_services');
+    final snap = await col.limit(1).get();
+    if (snap.docs.isEmpty) {
+      final services = [
+        {
+          'name_en': 'Ambulance',
+          'name_te': 'అంబులెన్స్',
+          'phone': '108',
+          'order': 1
+        },
+        {'name_en': 'Police', 'name_te': 'పోలీస్', 'phone': '112', 'order': 2},
+        {
+          'name_en': 'Fire Engine',
+          'name_te': 'అగ్నిమాపక దళం',
+          'phone': '101',
+          'order': 3
+        },
+        {'name_en': 'Disha', 'name_te': 'దిశ', 'phone': '181', 'order': 4},
+        {
+          'name_en': 'Electricity',
+          'name_te': 'విద్యుత్ శాఖ',
+          'phone': '1912',
+          'order': 7
+        },
+        {
+          'name_en': 'Arogya Sree',
+          'name_te': 'ఆరోగ్య శ్రీ',
+          'phone': '104',
+          'order': 8
+        },
+        {
+          'name_en': 'Crime Against Women',
+          'name_te': 'మహిళలపై క్రైమ్',
+          'phone': '1091',
+          'order': 11
+        },
+      ];
+      for (var s in services) await col.add(s);
+    }
+  }
+
+  Stream<List<Map<String, dynamic>>> getMovieTheatres() {
+    seedMoviesTheatresIfEmpty();
+    return FirebaseFirestore.instance
+        .collection('movies_theatres')
+        .snapshots()
+        .map((snap) => snap.docs.map((doc) {
+              final d = doc.data() as Map<String, dynamic>;
+              d['id'] = doc.id;
+              return d;
+            }).toList());
+  }
+
+  Future<void> seedMoviesTheatresIfEmpty() async {
+    final col = FirebaseFirestore.instance.collection('movies_theatres');
+    final snap = await col.limit(1).get();
+    if (snap.docs.isEmpty) {
+      final theatres = [
+        {
+          'theatreName': 'Gowtham Cinemas',
+          'movieName': '',
+          'lastUpdated': FieldValue.serverTimestamp()
+        },
+        {
+          'theatreName': 'Prasad Theatre',
+          'movieName': '',
+          'lastUpdated': FieldValue.serverTimestamp()
+        },
+        {
+          'theatreName': 'Sai Theatre',
+          'movieName': '',
+          'lastUpdated': FieldValue.serverTimestamp()
+        },
+      ];
+      for (var t in theatres) await col.add(t);
+    }
   }
 }
