@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 // REFACTOR IMPORTS
 import 'package:mana_rayachoty_sevalu/models/listing_model.dart';
 import 'package:mana_rayachoty_sevalu/services/firebase_service.dart';
@@ -1929,7 +1930,7 @@ class EmergencyCollectionPage extends StatelessWidget {
 }
 
 // ==================================================
-// 9. CONTACT ADMIN (PREMIUM UI + VALIDATION)
+// 9. CONTACT ADMIN (PREMIUM UI + VALIDATION + LEGAL LINKS)
 // ==================================================
 class ContactAdminPage extends StatefulWidget {
   const ContactAdminPage({super.key});
@@ -2053,8 +2054,7 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _nameCtrl,
-                    textCapitalization:
-                        TextCapitalization.words, // Soft keyboard caps
+                    textCapitalization: TextCapitalization.words,
                     decoration:
                         _premiumDecoration(isEng ? "Your Name" : "మీ పేరు"),
                   ),
@@ -2095,13 +2095,55 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
                                 letterSpacing: 1.1),
                           ),
                   ),
+
+                  const SizedBox(height: 30),
+                  const Divider(),
+                  const SizedBox(height: 10),
+
+                  // 🔥 LEGAL LINKS FOR GOOGLE PLAY COMPLIANCE
+                  ListTile(
+                    leading:
+                        const Icon(Icons.privacy_tip, color: Colors.blueGrey),
+                    title: Text(
+                      isEng ? "Privacy Policy" : "గోప్యతా విధానం",
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    trailing: const Icon(Icons.open_in_new,
+                        size: 16, color: Colors.grey),
+                    onTap: () async {
+                      final Uri url = Uri.parse(
+                          "https://papireddyvamshidhar.github.io/mana_rayachoty_sevalu/privacy_policy.html");
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading:
+                        const Icon(Icons.description, color: Colors.blueGrey),
+                    title: Text(
+                      isEng ? "Terms and Conditions" : "నియమాలు మరియు నిబంధనలు",
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    trailing: const Icon(Icons.open_in_new,
+                        size: 16, color: Colors.grey),
+                    onTap: () async {
+                      final Uri url = Uri.parse(
+                          "https://papireddyvamshidhar.github.io/mana_rayachoty_sevalu/terms_and_conditions.html");
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
       ),
     );
   }
 }
-
 // ==================================================
 // 10. AP GOVT SERVICES STATIC PAGE (POLICY COMPLIANT)
 // ==================================================
@@ -2173,9 +2215,9 @@ class APSevaluStaticPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // Changed "Govt" to "Public" to be safe
         title: Text(isEng ? "AP Public Services" : "ఏపీ పబ్లిక్ సేవలు"),
         backgroundColor: const Color(0xFF673AB7),
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -2212,7 +2254,7 @@ class APSevaluStaticPage extends StatelessWidget {
           ),
 
           // ===============================
-          // PREMIUM WHATSAPP BUTTON (Removed "Official" text)
+          // PREMIUM WHATSAPP BUTTON (SAFE UI + HI MSG)
           // ===============================
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -2239,11 +2281,12 @@ class APSevaluStaticPage extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(40),
                       onTap: () async {
-                        final Uri whatsappAppUri =
-                            Uri.parse("whatsapp://send?phone=919552300009");
+                        // 🔥 ADDED "?text=Hi" SO IT PRE-FILLS THE MESSAGE
+                        final Uri whatsappAppUri = Uri.parse(
+                            "whatsapp://send?phone=919552300009&text=Hi");
 
                         final Uri whatsappWebUri = Uri.parse(
-                            "https://api.whatsapp.com/send?phone=919552300009");
+                            "https://api.whatsapp.com/send?phone=919552300009&text=Hi");
 
                         if (await canLaunchUrl(whatsappAppUri)) {
                           await launchUrl(
@@ -2267,15 +2310,15 @@ class APSevaluStaticPage extends StatelessWidget {
                             const SizedBox(width: 10),
                             Flexible(
                               child: Text(
-                                // REMOVED THE WORD "OFFICIAL"
+                                // 🔥 SAFE NEUTRAL TEXT
                                 isEng
-                                    ? "AP State WhatsApp"
-                                    : "ఏపీ పబ్లిక్ వాట్సాప్ సేవలు",
+                                    ? "Citizen WhatsApp Helpline"
+                                    : "పబ్లిక్ వాట్సాప్ హెల్ప్‌లైన్",
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 17,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -2293,9 +2336,10 @@ class APSevaluStaticPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
+                    // 🔥 SAFE NEUTRAL SUBTEXT
                     isEng
-                        ? "Reach state services through WhatsApp."
-                        : "ప్రభుత్వ సేవలను వాట్సాప్ ద్వారా పొందండి.",
+                        ? "Open public helpline via WhatsApp."
+                        : "వాట్సాప్ ద్వారా పబ్లిక్ హెల్ప్‌లైన్‌ను సంప్రదించండి.",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
@@ -2843,7 +2887,7 @@ class _AddListingPageState extends State<AddListingPage> {
 }
 
 // ==================================================
-// 12. LISTING PAGE (VERSION C - STRICT + CLEAN UI)
+// 12. LISTING PAGE (UPGRADED WITH BETTER SEARCH)
 // ==================================================
 class ListingPage extends StatefulWidget {
   final String categoryTitle;
@@ -2879,7 +2923,9 @@ class _ListingPageState extends State<ListingPage> {
                 autofocus: true,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: isEng ? "Search..." : "వెతకండి...",
+                  hintText: isEng
+                      ? "Search by name or details..."
+                      : "పేరు లేదా వివరాలతో వెతకండి...",
                   hintStyle: const TextStyle(color: Colors.white70),
                   border: InputBorder.none,
                 ),
@@ -2942,12 +2988,16 @@ class _ListingPageState extends State<ListingPage> {
 
           List<Listing> list = snap.data!;
 
-          // SEARCH FILTER
+          // 🔥 UPGRADED BETTER SEARCH: Now searches Titles, Subtitles AND Descriptions!
           if (searchQuery.isNotEmpty) {
             list = list.where((l) {
               String f1 = (isEng ? l.f1En : l.f1Te).toLowerCase();
               String f3 = (isEng ? l.f3En : l.f3Te).toLowerCase();
-              return f1.contains(searchQuery) || f3.contains(searchQuery);
+              String f4 =
+                  (isEng ? l.f4En : l.f4Te).toLowerCase(); // Description
+              return f1.contains(searchQuery) ||
+                  f3.contains(searchQuery) ||
+                  f4.contains(searchQuery);
             }).toList();
           }
 
@@ -2973,7 +3023,6 @@ class _ListingPageState extends State<ListingPage> {
               String subTitleEn = f3IsMain ? l.f1En : l.f3En;
               String subTitleTe = f3IsMain ? l.f1Te : l.f3Te;
 
-              // Fallbacks
               if (mainTitleEn.isEmpty) mainTitleEn = l.f1En;
               if (mainTitleTe.isEmpty) mainTitleTe = l.f1Te;
 
@@ -2982,10 +3031,9 @@ class _ListingPageState extends State<ListingPage> {
               String displaySubTitle =
                   toTitleCase(isEng ? subTitleEn : subTitleTe);
 
-              // Movies Exception
               if (isMovies) {
-                displayMainTitle = isEng ? l.f2En : l.f2Te; // Movie Name
-                displaySubTitle = isEng ? l.f1En : l.f1Te; // Theater Name
+                displayMainTitle = isEng ? l.f2En : l.f2Te;
+                displaySubTitle = isEng ? l.f1En : l.f1Te;
                 if (displayMainTitle.isEmpty) {
                   displayMainTitle = displaySubTitle;
                 }
@@ -2995,7 +3043,7 @@ class _ListingPageState extends State<ListingPage> {
                   formatPriceWithUnit(l.f5En, widget.categoryTitle, isEng);
 
               // =========================================================
-              // 🔥 DYNAMIC LOCATION LOGIC (Fixes Shops & Schools)
+              // 🔥 DYNAMIC LOCATION LOGIC
               // =========================================================
               String displayLocation = "";
               List<String> currentLabelsEn =
@@ -3025,12 +3073,8 @@ class _ListingPageState extends State<ListingPage> {
                 }
               }
 
-              displayLocation =
-                  toTitleCase(displayLocation); // 🔥 Capitalizes Rayachoty
+              displayLocation = toTitleCase(displayLocation);
 
-              // =========================================================
-              // 2. BEAUTIFUL MODERN CARD UI
-              // =========================================================
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -3050,12 +3094,10 @@ class _ListingPageState extends State<ListingPage> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        // --- LEFT SIDE: TEXT DATA ---
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // 🔥 MAIN TITLE (Product / Service)
                               Text(
                                 displayMainTitle,
                                 style: const TextStyle(
@@ -3067,8 +3109,6 @@ class _ListingPageState extends State<ListingPage> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-
-                              // 🔥 SUBTITLE (Owner / Details)
                               if (displaySubTitle.isNotEmpty) ...[
                                 const SizedBox(height: 4),
                                 Text(
@@ -3082,10 +3122,7 @@ class _ListingPageState extends State<ListingPage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
-
                               const SizedBox(height: 12),
-
-                              // 🔥 PRICE TAG
                               if (displayPrice.isNotEmpty)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -3105,12 +3142,9 @@ class _ListingPageState extends State<ListingPage> {
                                     ),
                                   ),
                                 ),
-
                               if (displayPrice.isNotEmpty &&
                                   displayLocation.isNotEmpty)
                                 const SizedBox(height: 10),
-
-                              // 🔥 LOCATION WITH PIN ICON
                               if (displayLocation.isNotEmpty)
                                 Row(
                                   children: [
@@ -3134,14 +3168,10 @@ class _ListingPageState extends State<ListingPage> {
                             ],
                           ),
                         ),
-
                         const SizedBox(width: 12),
-
-                        // --- RIGHT SIDE: EMOJI & BOLD ARROW ---
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // 🔥 ANIMATED EMOJI (No Background)
                             SizedBox(
                               height: 50,
                               width: 50,
@@ -3162,10 +3192,7 @@ class _ListingPageState extends State<ListingPage> {
                                 },
                               ),
                             ),
-
                             const SizedBox(height: 14),
-
-                            // 🔥 BOLD "VIEW" BUTTON
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 6),
@@ -3226,7 +3253,7 @@ class _ListingPageState extends State<ListingPage> {
 }
 
 // ==================================================
-// 13. USER PROFILE (MY SERVICES & CONTACT ADMIN TABS)
+// 13. USER PROFILE (MY SERVICES, FAVORITES & ADMIN TABS)
 // ==================================================
 class MyListingsPage extends StatefulWidget {
   const MyListingsPage({super.key});
@@ -3235,7 +3262,7 @@ class MyListingsPage extends StatefulWidget {
 }
 
 class _MyListingsPageState extends State<MyListingsPage> {
-  int selectedTab = 0; // 0 = My Services, 1 = Contact Admin
+  int selectedTab = 0; // 0 = My Services, 1 = Favorites, 2 = Contact Admin
 
   // --- Contact Admin State Variables ---
   final TextEditingController _nameCtrl = TextEditingController();
@@ -3269,6 +3296,30 @@ class _MyListingsPageState extends State<MyListingsPage> {
     });
   }
 
+  // Helper to fetch individual favorite listings from Firebase safely
+  Future<List<Listing>> _fetchFavoritesList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favIds = prefs.getStringList('favorites') ?? [];
+    if (favIds.isEmpty) return [];
+
+    List<Listing> fetchedListings = [];
+    for (String id in favIds) {
+      try {
+        var doc = await FirebaseFirestore.instance
+            .collection('listings')
+            .doc(id)
+            .get();
+        if (doc.exists) {
+          fetchedListings.add(Listing.fromFirestore(
+              doc.data() as Map<String, dynamic>, doc.id));
+        }
+      } catch (e) {
+        // Skip broken references
+      }
+    }
+    return fetchedListings;
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isEng = currentLanguage == "English";
@@ -3280,7 +3331,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
       ),
       body: Column(
         children: [
-          // 🔥 TAB HEADER (Matching Admin Panel Style)
+          // 🔥 3 TABS HEADER
           Container(
             padding: const EdgeInsets.symmetric(vertical: 15),
             decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -3291,8 +3342,10 @@ class _MyListingsPageState extends State<MyListingsPage> {
               children: [
                 _buildTabIcon(
                     Icons.list_alt, isEng ? "My Services" : "నా సేవలు", 0),
-                _buildTabIcon(Icons.support_agent,
-                    isEng ? "Contact Admin" : "అడ్మిన్‌ కు మెసేజ్", 1),
+                _buildTabIcon(
+                    Icons.favorite, isEng ? "Saved" : "సేవ్ అయినవి", 1),
+                _buildTabIcon(
+                    Icons.support_agent, isEng ? "Admin" : "అడ్మిన్", 2),
               ],
             ),
           ),
@@ -3300,13 +3353,17 @@ class _MyListingsPageState extends State<MyListingsPage> {
 
           // 🔥 TAB BODY CONTENT
           Expanded(
-            child: selectedTab == 0
-                ? _buildMyServicesSection(isEng)
-                : _buildContactAdminSection(isEng),
+            child: _buildCurrentTab(isEng),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildCurrentTab(bool isEng) {
+    if (selectedTab == 0) return _buildMyServicesSection(isEng);
+    if (selectedTab == 1) return _buildFavoritesSection(isEng);
+    return _buildContactAdminSection(isEng);
   }
 
   // ================= TAB ICON BUILDER =================
@@ -3317,7 +3374,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
       child: Column(
         children: [
           Icon(icon,
-              size: 32,
+              size: 28,
               color: isSelected ? const Color(0xFF673AB7) : Colors.grey),
           const SizedBox(height: 4),
           Text(label,
@@ -3375,7 +3432,6 @@ class _MyListingsPageState extends State<MyListingsPage> {
               itemCount: snap.data!.length,
               itemBuilder: (context, i) {
                 final l = snap.data![i];
-                // 🔥 Capitalize the title to match the rest of the app
                 String displayTitle = toTitleCase(isEng ? l.f1En : l.f1Te);
 
                 return Card(
@@ -3415,7 +3471,70 @@ class _MyListingsPageState extends State<MyListingsPage> {
   }
 
   // ==========================================
-  // TAB 2: CONTACT ADMIN
+  // 🔥 TAB 2: SAVED FAVORITES (NEW)
+  // ==========================================
+  Widget _buildFavoritesSection(bool isEng) {
+    return FutureBuilder<List<Listing>>(
+      future: _fetchFavoritesList(),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snap.hasData || snap.data!.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.favorite_border,
+                    size: 80, color: Colors.grey.shade300),
+                const SizedBox(height: 16),
+                Text(
+                  isEng ? "No Saved Services." : "సేవ్ చేసిన సేవలు లేవు.",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade500),
+                ),
+              ],
+            ),
+          );
+        }
+
+        List<Listing> list = snap.data!;
+        return ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (context, i) {
+            Listing l = list[i];
+            String displayTitle = toTitleCase(isEng ? l.f1En : l.f1Te);
+
+            return Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              child: ListTile(
+                onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => DetailPage(listing: l)))
+                    .then((_) => setState(() {})), // Refresh if un-favorited
+                leading:
+                    Text(l.emoji ?? "📂", style: const TextStyle(fontSize: 24)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                title: Text(displayTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text(l.category),
+                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================
+  // TAB 3: CONTACT ADMIN & LEGAL LINKS
   // ==========================================
   Widget _buildContactAdminSection(bool isEng) {
     if (_sent) {
@@ -3506,6 +3625,45 @@ class _MyListingsPageState extends State<MyListingsPage> {
                         fontWeight: FontWeight.bold),
                   ),
           ),
+
+          const SizedBox(height: 30),
+          const Divider(),
+          const SizedBox(height: 10),
+
+          // 🔥 LEGAL LINKS FOR GOOGLE PLAY COMPLIANCE
+          ListTile(
+            leading: const Icon(Icons.privacy_tip, color: Colors.blueGrey),
+            title: Text(
+              isEng ? "Privacy Policy" : "గోప్యతా విధానం",
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            trailing:
+                const Icon(Icons.open_in_new, size: 16, color: Colors.grey),
+            onTap: () async {
+              final Uri url = Uri.parse(
+                  "https://papireddyvamshidhar.github.io/mana_rayachoty_sevalu/privacy_policy.html");
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.description, color: Colors.blueGrey),
+            title: Text(
+              isEng ? "Terms and Conditions" : "నియమాలు మరియు నిబంధనలు",
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            trailing:
+                const Icon(Icons.open_in_new, size: 16, color: Colors.grey),
+            onTap: () async {
+              final Uri url = Uri.parse(
+                  "https://papireddyvamshidhar.github.io/mana_rayachoty_sevalu/terms_and_conditions.html");
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -3513,7 +3671,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
 }
 
 // ==================================================
-// 14. DETAIL PAGE (PRODUCT-FOCUSED & SCALABLE)
+// 14. DETAIL PAGE (FAVORITES, SHARE, WHATSAPP, REPORT)
 // ==================================================
 class DetailPage extends StatefulWidget {
   final Listing listing;
@@ -3524,11 +3682,106 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavorite();
+  }
+
+  // 🔥 1. FAVORITES LOGIC (SharedPreferences)
+  Future<void> _checkFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favs = prefs.getStringList('favorites') ?? [];
+    setState(() {
+      isFavorite = favs.contains(widget.listing.id);
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favs = prefs.getStringList('favorites') ?? [];
+    if (isFavorite) {
+      favs.remove(widget.listing.id);
+    } else {
+      favs.add(widget.listing.id);
+    }
+    await prefs.setStringList('favorites', favs);
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(currentLanguage == "English"
+          ? (isFavorite ? "Saved to Favorites ❤️" : "Removed from Favorites")
+          : (isFavorite ? "ఫేవరెట్స్‌లో సేవ్ చేయబడింది ❤️" : "తొలగించబడింది")),
+      duration: const Duration(seconds: 1),
+    ));
+  }
+
+  // 🔥 2. SHARE LOGIC
+  void _shareListing() {
+    bool isEng = currentLanguage == "English";
+    String title =
+        toTitleCase(isEng ? widget.listing.f1En : widget.listing.f1Te);
+    String phone = widget.listing.f2En;
+    String text = isEng
+        ? "Check out $title on Mana Rayachoty Sevalu App! \n📞 Phone: $phone\nDownload the app to see more local services."
+        : "మన రాయచోటి సేవలు యాప్‌లో $title ని చూడండి! \n📞 ఫోన్: $phone\nమరిన్ని స్థానిక సేవల కోసం యాప్‌ని డౌన్‌లోడ్ చేసుకోండి.";
+    Share.share(text);
+  }
+
+  // 🔥 3. REPORT LISTING LOGIC
+  void _showReportDialog() {
+    final TextEditingController reportCtrl = TextEditingController();
+    bool isEng = currentLanguage == "English";
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(isEng ? "Report Listing" : "రిపోర్ట్ చేయండి"),
+        content: TextField(
+          controller: reportCtrl,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: isEng ? "Why are you reporting this?" : "కారణం రాయండి...",
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(isEng ? "CANCEL" : "రద్దు"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () async {
+              if (reportCtrl.text.trim().isEmpty) return;
+              Navigator.pop(ctx);
+              await FirebaseFirestore.instance.collection('reports').add({
+                'listingId': widget.listing.id,
+                'listingName': widget.listing.f1En,
+                'reason': reportCtrl.text.trim(),
+                'timestamp': FieldValue.serverTimestamp(),
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(isEng
+                      ? "Report sent. Admin will review."
+                      : "రిపోర్ట్ పంపబడింది."),
+                  backgroundColor: Colors.orange));
+            },
+            child: Text(isEng ? "REPORT" : "రిపోర్ట్",
+                style: const TextStyle(color: Colors.white)),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isEng = currentLanguage == "English";
 
-    // Standardized Price Formatting
     String displayPrice = formatPriceWithUnit(
       widget.listing.f5En,
       widget.listing.category,
@@ -3540,22 +3793,30 @@ class _DetailPageState extends State<DetailPage> {
         title: Text(isEng ? "Service Details" : "సేవ వివరాలు"),
         backgroundColor: const Color(0xFF673AB7),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _shareListing,
+          ),
+          IconButton(
+            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.redAccent : Colors.white),
+            onPressed: _toggleFavorite,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ================= HEADER =================
-            // ================= HEADER =================
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
-                    toTitleCase(isEng
-                        ? widget.listing.f1En
-                        : widget.listing.f1Te), // 🔥 MAIN TITLE CAPITALS
+                    toTitleCase(
+                        isEng ? widget.listing.f1En : widget.listing.f1Te),
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -3573,7 +3834,6 @@ class _DetailPageState extends State<DetailPage> {
             const SizedBox(height: 10),
             const Divider(height: 40),
 
-// ================= INFO SECTION (FULLY DYNAMIC) =================
             ...List.generate(
               isEng
                   ? (categoryLabels[widget.listing.category]?.length ?? 0)
@@ -3586,7 +3846,6 @@ class _DetailPageState extends State<DetailPage> {
                 List<String> englishLabels =
                     categoryLabels[widget.listing.category]!;
 
-                // 🔥 CRITICAL FIX: Map database fields exactly to the loop index.
                 String getEnValue(int i) {
                   switch (i) {
                     case 0:
@@ -3628,17 +3887,13 @@ class _DetailPageState extends State<DetailPage> {
                 String valueEn = getEnValue(index);
                 String valueTe = getTeValue(index);
 
-                // Fallback to English data if Telugu data is missing
                 String finalValue =
                     (isEng || valueTe.isEmpty) ? valueEn : valueTe;
-
-                finalValue =
-                    toTitleCase(finalValue); // 🔥 Capitalizes all details
+                finalValue = toTitleCase(finalValue);
 
                 String label = currentLabels[index];
                 String enLabel = englishLabels[index].toLowerCase();
 
-                // Skip Empty values or Phone Numbers (Phone has its own Call button)
                 if (finalValue.isEmpty || enLabel.contains("phone")) {
                   return const SizedBox.shrink();
                 }
@@ -3646,7 +3901,6 @@ class _DetailPageState extends State<DetailPage> {
                 IconData icon = Icons.info_outline;
                 Color? textColor;
 
-                // Auto-assign formatting based on the English Label keywords
                 if (enLabel.contains("owner") ||
                     enLabel.contains("name") ||
                     enLabel.contains("person")) {
@@ -3662,7 +3916,6 @@ class _DetailPageState extends State<DetailPage> {
                     enLabel.contains("fee")) {
                   icon = Icons.currency_rupee;
                   textColor = Colors.green;
-                  // Apply formatting dynamically
                   finalValue = formatPriceWithUnit(
                       finalValue, widget.listing.category, isEng);
                 } else {
@@ -3672,7 +3925,7 @@ class _DetailPageState extends State<DetailPage> {
                 return _infoItem(icon, label, finalValue, color: textColor);
               },
             ),
-            // ================= SAFETY BOX =================
+
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -3717,63 +3970,133 @@ class _DetailPageState extends State<DetailPage> {
 
             const SizedBox(height: 30),
 
-            // ================= PREMIUM CALL BUTTON =================
-            if (widget.listing.category !=
-                "Movies") // 🔥 HIDES BUTTON FOR CINEMAS
-              Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF00C853),
-                      Color(0xFF43A047)
-                    ], // Glowing green
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green.withOpacity(0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    )
-                  ],
-                ),
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final String phone = widget.listing.f2En;
-                    if (phone.isEmpty) return;
-                    final Uri callUri = Uri.parse("tel:$phone");
-                    if (await canLaunchUrl(callUri)) await launchUrl(callUri);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
-                    backgroundColor:
-                        Colors.transparent, // Let gradient show through
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+            // 🔥 4. UPGRADED: WHATSAPP + CALL BUTTON ROW
+            if (widget.listing.category != "Movies")
+              Row(
+                children: [
+                  // WHATSAPP BUTTON
+                  Expanded(
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                            colors: [Color(0xFF25D366), Color(0xFF128C7E)]),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.green.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4))
+                        ],
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          final String phone = widget.listing.f2En;
+                          if (phone.isEmpty) return;
+                          final Uri waUri = Uri.parse(
+                              "whatsapp://send?phone=91$phone&text=Hi");
+                          final Uri webUri = Uri.parse(
+                              "https://api.whatsapp.com/send?phone=91$phone&text=Hi");
+                          if (await canLaunchUrl(waUri)) {
+                            await launchUrl(waUri,
+                                mode: LaunchMode.externalApplication);
+                          } else {
+                            await launchUrl(webUri,
+                                mode: LaunchMode.externalApplication);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5), // 🔥 Reduced padding
+                        ),
+                        icon: const Icon(Icons.chat,
+                            color: Colors.white,
+                            size: 20), // 🔥 Slightly smaller icon
+                        label: FittedBox(
+                          // 🔥 Forces text to scale down instead of wrapping!
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            isEng ? "WhatsApp" : "వాట్సాప్",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  icon: const Icon(Icons.call, color: Colors.white, size: 26),
-                  label: Text(
-                    isEng ? "CALL NOW" : "కాల్ చేయండి",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.2,
+                  const SizedBox(width: 12),
+                  // CALL BUTTON
+                  Expanded(
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF673AB7),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color(0xFF673AB7).withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4))
+                        ],
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          final String phone = widget.listing.f2En;
+                          if (phone.isEmpty) return;
+                          final Uri callUri = Uri.parse("tel:$phone");
+                          if (await canLaunchUrl(callUri))
+                            await launchUrl(callUri);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                        ),
+                        icon: const Icon(Icons.call,
+                            color: Colors.white, size: 20),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            isEng ? "Call" : "కాల్",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+                ],
+              ),
+            const SizedBox(height: 20),
+
+            // 🔥 5. REPORT LISTING BUTTON
+            Center(
+              child: TextButton.icon(
+                onPressed: _showReportDialog,
+                icon: const Icon(Icons.flag, color: Colors.grey, size: 18),
+                label: Text(
+                  isEng ? "Report this listing" : "ఈ పోస్ట్‌ను రిపోర్ట్ చేయండి",
+                  style: const TextStyle(
+                      color: Colors.grey, decoration: TextDecoration.underline),
                 ),
               ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  // ================= INFO ITEM WIDGET =================
   Widget _infoItem(IconData icon, String label, String value, {Color? color}) {
     if (value.isEmpty) return const SizedBox.shrink();
 

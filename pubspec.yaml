@@ -1,7 +1,7 @@
 name: mana_rayachoty_sevalu
 description: "Professional service app: mana rayachoty sevalu. Created by Vamshi Reddy."
 publish_to: 'none'
-version: 1.0.0+15
+version: 1.0.0+16
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
