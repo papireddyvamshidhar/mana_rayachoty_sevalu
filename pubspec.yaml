@@ -1,7 +1,7 @@
 name: mana_rayachoty_sevalu
 description: "Professional service app: mana rayachoty sevalu. Created by Vamshi Reddy."
 publish_to: 'none'
-version: 1.0.0+9
+version: 1.0.0+15
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -17,7 +17,7 @@ dependencies:
   url_launcher: ^6.3.2
   share_plus: ^12.0.1
   shared_preferences: ^2.2.0
-  translator: ^1.0.0 # ✅ Enabled for Zero-Lag Hybrid Translation
+  translator: ^1.0.0
   google_fonts: ^8.0.2
 
 dev_dependencies:
@@ -25,26 +25,25 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.11
+  flutter_native_splash: ^2.4.2
 
 flutter:
   uses-material-design: true
   assets:
     - assets/icon.png
-    - assets/splash.png 
+    - assets/splash.png
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: false
   image_path: "assets/icon.png"
+  adaptive_icon_background: "#5B3DF5"
+  adaptive_icon_foreground: "assets/icon.png"
   min_sdk_android: 21
 
 flutter_native_splash:
   color: "#ffffff"
   image: assets/splash.png
-  android_gravity: center
-  fullscreen: true
   android_12:
-    image: assets/splash.png
     color: "#ffffff"
-  android: true
+    image: assets/splash.png

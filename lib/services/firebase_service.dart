@@ -105,7 +105,7 @@ class FirebaseService {
         .orderBy('order')
         .snapshots()
         .map((snap) => snap.docs.map((doc) {
-              final d = doc.data() as Map<String, dynamic>;
+              final d = doc.data();
               d['id'] = doc.id;
               return d;
             }).toList());
@@ -149,7 +149,9 @@ class FirebaseService {
           'order': 11
         },
       ];
-      for (var s in services) await col.add(s);
+      for (var s in services) {
+        await col.add(s);
+      }
     }
   }
 
@@ -159,7 +161,7 @@ class FirebaseService {
         .collection('movies_theatres')
         .snapshots()
         .map((snap) => snap.docs.map((doc) {
-              final d = doc.data() as Map<String, dynamic>;
+              final d = doc.data();
               d['id'] = doc.id;
               return d;
             }).toList());
@@ -186,7 +188,9 @@ class FirebaseService {
           'lastUpdated': FieldValue.serverTimestamp()
         },
       ];
-      for (var t in theatres) await col.add(t);
+      for (var t in theatres) {
+        await col.add(t);
+      }
     }
   }
 }

@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.mana_rayachoty_sevalu"
+    namespace = "com.rayachoty.sevalu"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

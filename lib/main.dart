@@ -126,8 +126,7 @@ String getFinalEmoji(
   String f4,
   String f3,
 ) {
-  final text = (f1 + " " + f3 + " " + f4 + " " + subCategory + " " + category)
-      .toLowerCase();
+  final text = ("$f1 $f3 $f4 $subCategory $category").toLowerCase();
 
   // 🔥 Longest keyword match first
   for (final entry in sortedAndhraKeywords) {
@@ -144,7 +143,7 @@ String getFinalEmoji(
   // Category fallback
   switch (category) {
     case "Farmers":
-      return "🌾";
+      return "👨‍🌾";
     case "Services":
       return "🛠";
     case "Restaurant":
@@ -155,10 +154,10 @@ String getFinalEmoji(
       return "🏥";
     case "Loans":
       return "🏦";
-    case "Movies": // 👈 ADD THIS LINE
-      return "🎬"; // 👈 ADD THIS LINE
-    case "Vehicle Rentals": // 👈 ADD THIS LINE
-      return "🚗"; // 👈 ADD THIS LINE
+    case "Movies":
+      return "🎬";
+    case "Vehicle Rentals":
+      return "🚗";
     default:
       return "📂";
   }
@@ -629,29 +628,39 @@ Map<String, List<String>> categoryHintsTe = {
 // 4. SUBCATEGORY AUTO DETECTION (RESTORED SAFE)
 // ==================================================
 String detectSubCategory(String name, String desc) {
-  String combined = (name + " " + desc).toLowerCase();
+  String combined = ("$name $desc").toLowerCase();
 
   if (combined.contains("apple") ||
       combined.contains("mango") ||
       combined.contains("fruit") ||
-      combined.contains("పండు")) return "Fruits";
+      combined.contains("పండు")) {
+    return "Fruits";
+  }
 
   if (combined.contains("tomato") ||
       combined.contains("potato") ||
       combined.contains("veg") ||
-      combined.contains("కూర")) return "Vegetables";
+      combined.contains("కూర")) {
+    return "Vegetables";
+  }
 
   if (combined.contains("rice") ||
       combined.contains("grain") ||
-      combined.contains("ధాన్యం")) return "Grains";
+      combined.contains("ధాన్యం")) {
+    return "Grains";
+  }
 
   if (combined.contains("electrician") ||
       combined.contains("light") ||
-      combined.contains("ఎలక్ట్రిషియన్")) return "Electrician";
+      combined.contains("ఎలక్ట్రిషియన్")) {
+    return "Electrician";
+  }
 
   if (combined.contains("plumber") ||
       combined.contains("tap") ||
-      combined.contains("ప్లంబర్")) return "Plumber";
+      combined.contains("ప్లంబర్")) {
+    return "Plumber";
+  }
 
   return "Other";
 }
@@ -755,15 +764,15 @@ class _RayachotySevaluAppState extends State<RayachotySevaluApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       theme: ThemeData(
           useMaterial3: true,
-          textTheme: GoogleFonts.notoSansTeluguTextTheme(
-              Theme.of(context).textTheme), // 🔥 NEW PREMIUM FONT
+          textTheme:
+              GoogleFonts.notoSansTeluguTextTheme(Theme.of(context).textTheme),
           primaryColor: const Color(0xFF673AB7),
           scaffoldBackgroundColor: Colors.white),
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const DashboardScreen(),
+      home:
+          const DashboardScreen(), // 🔥 డైరెక్ట్ గా డ్యాష్‌బోర్డ్ కి వెళ్తుంది
     );
   }
 }
@@ -817,7 +826,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       "title": "Farmers",
       "telugu": "రైతులు",
       "isEmoji": true,
-      "emoji": "🍎",
+      "emoji": "👨‍🌾", // 🔥 ఇక్కడ యాపిల్ కి బదులు ఫార్మర్ పెట్టాను
       "color": Color(0xFFE8F5E9),
       "iconColor": Colors.green
     },
@@ -1025,139 +1034,323 @@ class _DashboardScreenState extends State<DashboardScreen> {
     bool isEng = currentLanguage == "English";
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 125,
+        toolbarHeight: 140, // 🔥 Increased to comfortably fit the split title
         backgroundColor: const Color(0xFF673AB7),
+        elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.call, color: Colors.white),
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const ContactAdminPage())),
-        ),
-        title: Column(
-          children: [
-            Text(isEng ? "Mana" : "మన",
-                style: const TextStyle(
+        automaticallyImplyLeading: false,
+        title: GestureDetector(
+          onLongPress: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => const AdminLoginPage()),
+          ).then((_) => setState(() {})),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 🔥 SPLIT TITLE FOR ENGLISH, SINGLE LINE FOR TELUGU
+              if (isEng) ...[
+                Text(
+                  "Mana",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
                     fontSize: 22,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-            Text(isEng ? "Rayachoty Sevalu" : "రాయచోటి సేవలు",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                Text(
+                  "Rayachoty Sevalu",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 22,
                     color: Colors.white,
-                    fontSize: 22)),
-            const SizedBox(height: 5),
-            Text(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ] else ...[
+                Text(
+                  "మన రాయచోటి సేవలు",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 5),
+              Text(
                 isEng
-                    ? "Developed by Vamshi Reddy"
-                    : "రూపొందించిన వారు వంశీ రెడ్డి",
-                style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.yellowAccent,
-                    fontWeight: FontWeight.bold)),
-          ],
+                    ? "Connecting Local Services"
+                    : "స్థానిక సేవలను కలుపుతుంది",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                isEng
+                    ? "Powered by Vamshi Tech Infra"
+                    : "వంశి టెక్ ఇన్‌ఫ్రా ఆధ్వర్యంలో",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  color: Colors.yellowAccent,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           StreamBuilder<int>(
             stream: firebaseService.getPendingCount(),
             builder: (context, snap) {
               int count = snap.data ?? 0;
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                        isAdminLoggedIn
-                            ? Icons.admin_panel_settings
-                            : Icons.lock_outline,
-                        color: isAdminLoggedIn
-                            ? Colors.yellowAccent
-                            : Colors.white,
-                        size: 28),
-                    onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (c) => const AdminLoginPage()))
-                        .then((_) => setState(() {})),
+              // Feature preserved: Shows pending count ONLY if logged in, but with NO shield icon.
+              if (count > 0 && isAdminLoggedIn) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.red,
+                      child: Text(
+                        "$count",
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                  if (count > 0 && isAdminLoggedIn)
-                    Positioned(
-                        right: 8,
-                        top: 12,
-                        child: CircleAvatar(
-                            radius: 9,
-                            backgroundColor: Colors.red,
-                            child: Text("$count",
-                                style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)))),
-                ],
-              );
+                );
+              }
+              // Empty space to perfectly balance the left-side icon so the title stays dead center
+              return const SizedBox(width: 48);
             },
           ),
         ],
       ),
       body: Column(
         children: [
+          // ==========================================
+          // UTILITY ROW: LANGUAGE TOGGLE & PROFILE
+          // ==========================================
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: _buildLangChip("English", isEng)),
-                const SizedBox(width: 12),
-                Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue.shade50, shape: BoxShape.circle),
-                      child: IconButton(
-                          icon: const Icon(Icons.person,
-                              color: Color(0xFF03A9F4), size: 30),
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MyListingsPage()))),
+                // 1. Sleek Animated Language Toggle
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    Text(isEng ? "My Services" : "నా సేవలు",
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.blue.shade700,
-                            fontWeight: FontWeight.bold)),
-                  ],
+                    child: Stack(
+                      children: [
+                        // Animated sliding background pill
+                        AnimatedAlign(
+                          alignment: isEng
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          child: FractionallySizedBox(
+                            widthFactor: 0.5,
+                            child: Container(
+                              margin: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF673AB7),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Text Labels
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setString(
+                                      'selected_language', "English");
+                                  setState(() => currentLanguage = "English");
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "English",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: isEng
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setString(
+                                      'selected_language', "Telugu");
+                                  setState(() => currentLanguage = "Telugu");
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "తెలుగు",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: !isEng
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
-                Expanded(child: _buildLangChip("Telugu", !isEng)),
+
+                // 2. Modern Profile Pill Button
+                Expanded(
+                  flex: 2,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(25),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MyListingsPage()),
+                    ),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(25),
+                        border:
+                            Border.all(color: Colors.blue.shade100, width: 1.5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.manage_accounts_rounded,
+                              color: Color(0xFF0288D1), size: 20),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              isEng ? "User" : "వినియోగదారు",
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color(0xFF0288D1),
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                    14, // 🔥 Increased font size for better visibility
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+
+          // ==========================================
+          // PREMIUM "ADD SERVICE" CTA BUTTON
+          // ==========================================
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
               height: 65,
-              child: ElevatedButton(
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (c) => const AddListingPage())),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF673AB7),
-                    foregroundColor: Colors.white,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.add_circle_outline, size: 28),
-                    const SizedBox(width: 10),
-                    Text(isEng ? "Add Your Service" : "మీ సేవను జోడించండి",
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF7E57C2),
+                    Color(0xFF512DA8)
+                  ], // Premium Purple Gradient
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF512DA8).withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  )
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (c) => const AddListingPage())),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.add,
+                            color: Colors.white, size: 24),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        isEng ? "Add Your Service" : "మీ సేవను జోడించండి",
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                  ],
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 12), // Beautiful spacing before the grid
           if (isAdminLoggedIn)
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -1206,12 +1399,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 final cat = categories[index];
                 return GestureDetector(
                   onTap: () async {
-                    if (cat["title"] == "AP Sevalu")
+                    if (cat["title"] == "AP Sevalu") {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (_) => const APSevaluStaticPage()));
-                    else if (cat["title"] == "Emergency")
+                    } else if (cat["title"] == "Emergency")
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -1261,36 +1454,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildLangChip(String label, bool isSelected) {
-    return ChoiceChip(
-      selected: isSelected,
-      onSelected: (v) async {
-        if (v) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('selected_language', label);
-          setState(() => currentLanguage = label);
-        }
-      },
-      label: Container(
-        width: double.infinity,
-        alignment: Alignment.center,
-        child: Text(label == "Telugu" ? "తెలుగు" : "English",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.white : Colors.black87)),
-      ),
-      selectedColor: const Color(0xFF673AB7),
-      backgroundColor: Colors.grey.shade200,
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      showCheckmark: false,
-    );
-  }
-
   void _navigateWithSubCategory(String catTitle) {
     // UPDATED: Strict subcategory mapping for filtering logic
-    final Map<String, List<String>> _subCatMapEn = {
+    final Map<String, List<String>> subCatMapEn = {
       "Services": [
         "Plumber",
         "Electrician",
@@ -1357,7 +1523,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ], // Updated Structure
     };
 
-    final Map<String, List<String>> _subCatMapTe = {
+    final Map<String, List<String>> subCatMapTe = {
       "Services": [
         "ప్లంబర్",
         "ఎలక్ట్రీషియన్",
@@ -1379,7 +1545,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         "ఇతరులు"
       ],
       "Jobs": [
-        "సాఫ్ట్‌വേర్",
+        "సాఫ్ట్‌వేర్",
         "సేల్స్",
         "టీచర్",
         "డ్రైవర్",
@@ -1430,15 +1596,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ], // Updated Structure
     };
 
-    if (_subCatMapEn.containsKey(catTitle)) {
+    if (subCatMapEn.containsKey(catTitle)) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => SubCategoryGridScreen(
                     categoryTitle: catTitle,
                     subCategories: currentLanguage == "English"
-                        ? _subCatMapEn[catTitle]!
-                        : _subCatMapTe[catTitle]!,
+                        ? subCatMapEn[catTitle]!
+                        : subCatMapTe[catTitle]!,
                   )));
     } else {
       // Movies and other categories skip subcategory screen
@@ -1500,7 +1666,8 @@ class SubCategoryGridScreen extends StatelessWidget {
       case "Vehicle Rentals":
         return "🚗";
       case "Farmers":
-        return "🌾";
+      case "Farmers":
+        return "👨‍🌾";
       case "Shops":
         return "🛒";
       case "Services":
@@ -1656,7 +1823,7 @@ class _AnimatedTileState extends State<_AnimatedTile> {
 }
 
 // ==================================================
-// 8. EMERGENCY PAGE
+// 8. EMERGENCY PAGE (POLICY COMPLIANT)
 // ==================================================
 class EmergencyCollectionPage extends StatelessWidget {
   const EmergencyCollectionPage({super.key});
@@ -1679,43 +1846,90 @@ class EmergencyCollectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isEng = currentLanguage == "English";
     return Scaffold(
-      appBar:
-          AppBar(title: Text(isEng ? "Emergency Services" : "అత్యవసర సేవలు")),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: firebaseService.getEmergencyServices(),
-        builder: (context, snap) {
-          if (!snap.hasData)
-            return const Center(child: CircularProgressIndicator());
-          return ListView.builder(
-              itemCount: snap.data!.length,
-              itemBuilder: (context, i) {
-                final item = snap.data![i];
-                final String title = isEng ? item['name_en'] : item['name_te'];
-                return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: ListTile(
-                        leading: Text(getEmergencyEmoji(item['name_en']),
-                            style: const TextStyle(fontSize: 24)),
-                        title: Text(title,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text(item['phone']),
-                        trailing: IconButton(
-                            icon: const Icon(Icons.call, color: Colors.green),
-                            onPressed: () =>
-                                launchUrl(Uri.parse("tel:${item['phone']}"))),
-                        onTap: () =>
-                            launchUrl(Uri.parse("tel:${item['phone']}"))));
-              });
-        },
+      appBar: AppBar(
+        title: Text(isEng ? "Emergency Services" : "అత్యవసర సేవలు"),
+        backgroundColor: const Color(0xFF673AB7),
+        foregroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          // ===============================
+          // 🔥 REQUIRED GOOGLE PLAY DISCLAIMER
+          // ===============================
+          Container(
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              border: Border.all(color: Colors.orange.shade300),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline, color: Colors.orange.shade800),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    isEng
+                        ? "Disclaimer: This app does NOT represent any government entity. These are publicly available national helpline numbers."
+                        : "గమనిక: ఈ యాప్ ఏ ప్రభుత్వ విభాగానికి చెందినది కాదు. ఇవి పబ్లిక్ గా అందుబాటులో ఉన్న జాతీయ హెల్ప్‌లైన్ నంబర్లు.",
+                    style: TextStyle(
+                      color: Colors.orange.shade900,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ===============================
+          // SERVICES LIST
+          // ===============================
+          Expanded(
+            child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: firebaseService.getEmergencyServices(),
+              builder: (context, snap) {
+                if (!snap.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                    itemCount: snap.data!.length,
+                    itemBuilder: (context, i) {
+                      final item = snap.data![i];
+                      final String title =
+                          isEng ? item['name_en'] : item['name_te'];
+                      return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          child: ListTile(
+                              leading: Text(getEmergencyEmoji(item['name_en']),
+                                  style: const TextStyle(fontSize: 24)),
+                              title: Text(title,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Text(item['phone']),
+                              trailing: IconButton(
+                                  icon: const Icon(Icons.call,
+                                      color: Colors.green),
+                                  onPressed: () => launchUrl(
+                                      Uri.parse("tel:${item['phone']}"))),
+                              onTap: () => launchUrl(
+                                  Uri.parse("tel:${item['phone']}"))));
+                    });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 // ==================================================
-// 9. CONTACT ADMIN (FIXED OVERFLOW)
+// 9. CONTACT ADMIN (PREMIUM UI + VALIDATION)
 // ==================================================
 class ContactAdminPage extends StatefulWidget {
   const ContactAdminPage({super.key});
@@ -1733,26 +1947,71 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
   bool _sent = false;
 
   Future<void> _sendMessage() async {
-    if (_nameCtrl.text.isEmpty ||
-        _phoneCtrl.text.isEmpty ||
-        _reasonCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("All fields required")));
+    bool isEng = currentLanguage == "English";
+
+    // 1. Basic Empty Check
+    if (_nameCtrl.text.trim().isEmpty ||
+        _phoneCtrl.text.trim().isEmpty ||
+        _reasonCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(isEng ? "All fields required" : "అన్ని ఫీల్డ్స్ తప్పనిసరి"),
+          backgroundColor: Colors.red));
       return;
     }
+
+    // 2. Strict Phone Validation (10 Digits)
+    if (!RegExp(r'^[0-9]{10}$').hasMatch(_phoneCtrl.text.trim())) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(isEng
+              ? "Enter valid 10 digit number"
+              : "సరైన 10 అంకెల నంబర్ నమోదు చేయండి"),
+          backgroundColor: Colors.red));
+      return;
+    }
+
     setState(() => _isSending = true);
+
+    // 3. Apply Title Case to Name automatically
+    String safeName = toTitleCase(_nameCtrl.text.trim());
+
     await FirebaseFirestore.instance.collection('contact_messages').add({
-      'userName': _nameCtrl.text,
-      'userPhone': _phoneCtrl.text,
-      'message': _reasonCtrl.text,
+      'userName': safeName,
+      'userPhone': _phoneCtrl.text.trim(),
+      'message': _reasonCtrl.text.trim(),
       'type': 'general',
       'timestamp': FieldValue.serverTimestamp(),
       'status': 'pending'
     });
+
     setState(() {
       _isSending = false;
       _sent = true;
     });
+  }
+
+  // Premium TextField Decoration Helper
+  InputDecoration _premiumDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      counterText: "",
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      labelStyle:
+          TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w500),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: Color(0xFF673AB7), width: 2),
+      ),
+    );
   }
 
   @override
@@ -1761,9 +2020,11 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(isEng ? "Contact Admin" : "అడ్మిన్‌ను సంప్రదించండి")),
+        title: Text(isEng ? "Contact Admin" : "అడ్మిన్‌ను సంప్రదించండి"),
+        backgroundColor: const Color(0xFF673AB7),
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
-        // FIXED: Added ScrollView to prevent keyboard overflow
         padding: const EdgeInsets.all(20),
         child: _sent
             ? Center(
@@ -1772,61 +2033,67 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
                   children: [
                     const SizedBox(height: 50),
                     const Icon(Icons.check_circle,
-                        color: Colors.green, size: 60),
+                        color: Colors.green, size: 80),
                     const SizedBox(height: 20),
                     Text(
                       isEng
-                          ? "Message sent successfully!"
-                          : "సందేశం విజయవంతంగా పంపబడింది!",
+                          ? "Message sent successfully!\nWe will contact you soon."
+                          : "సందేశం విజయవంతంగా పంపబడింది!\nమేము త్వరలో మిమ్మల్ని సంప్రదిస్తాము.",
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black87),
                     ),
                   ],
                 ),
               )
             : Column(
                 children: [
-                  TextField(
+                  const SizedBox(height: 10),
+                  TextFormField(
                     controller: _nameCtrl,
-                    decoration: InputDecoration(
-                      labelText: isEng ? "Your Name" : "మీ పేరు",
-                      border: const OutlineInputBorder(),
-                    ),
+                    textCapitalization:
+                        TextCapitalization.words, // Soft keyboard caps
+                    decoration:
+                        _premiumDecoration(isEng ? "Your Name" : "మీ పేరు"),
                   ),
                   const SizedBox(height: 15),
-                  TextField(
+                  TextFormField(
                     controller: _phoneCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      labelText: isEng ? "Phone Number" : "ఫోన్ నంబర్",
-                      border: const OutlineInputBorder(),
-                    ),
+                    maxLength: 10,
+                    decoration: _premiumDecoration(
+                        isEng ? "Phone Number" : "ఫోన్ నంబర్"),
                   ),
                   const SizedBox(height: 15),
-                  TextField(
+                  TextFormField(
                     controller: _reasonCtrl,
                     maxLines: 5,
-                    decoration: InputDecoration(
-                      labelText:
-                          isEng ? "Contact For" : "సంప్రదించడానికి కారణం",
-                      border: const OutlineInputBorder(),
-                    ),
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: _premiumDecoration(
+                        isEng ? "Reason for Contact" : "సంప్రదించడానికి కారణం"),
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: _isSending ? null : _sendMessage,
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 55),
+                      minimumSize: const Size(double.infinity, 60),
                       backgroundColor: const Color(0xFF673AB7),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 4,
                     ),
                     child: _isSending
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(isEng ? "SUBMIT" : "సబ్మిట్ చేయండి",
+                        : Text(
+                            isEng ? "SEND MESSAGE" : "సందేశం పంపండి",
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 18)),
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1),
+                          ),
                   ),
                 ],
               ),
@@ -1836,7 +2103,7 @@ class _ContactAdminPageState extends State<ContactAdminPage> {
 }
 
 // ==================================================
-// 10. AP GOVT SERVICES STATIC PAGE
+// 10. AP GOVT SERVICES STATIC PAGE (POLICY COMPLIANT)
 // ==================================================
 
 class APSevaluStaticPage extends StatelessWidget {
@@ -1906,16 +2173,49 @@ class APSevaluStaticPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEng ? "AP Govt Services" : "ఏపీ ప్రభుత్వ సేవలు"),
+        // Changed "Govt" to "Public" to be safe
+        title: Text(isEng ? "AP Public Services" : "ఏపీ పబ్లిక్ సేవలు"),
         backgroundColor: const Color(0xFF673AB7),
       ),
       body: Column(
         children: [
           // ===============================
-          // PREMIUM OFFICIAL WHATSAPP BUTTON
+          // 🔥 REQUIRED GOOGLE PLAY DISCLAIMER
+          // ===============================
+          Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              border: Border.all(color: Colors.orange.shade300),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline, color: Colors.orange.shade800),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    isEng
+                        ? "Disclaimer: This app does NOT represent any government entity. These are publicly available links provided for citizen convenience."
+                        : "గమనిక: ఈ యాప్ ఏ ప్రభుత్వ విభాగానికి చెందినది కాదు. ఇక్కడ ఉన్న సమాచారం పబ్లిక్ సోర్సెస్ నుండి తీసుకోబడింది.",
+                    style: TextStyle(
+                      color: Colors.orange.shade900,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ===============================
+          // PREMIUM WHATSAPP BUTTON (Removed "Official" text)
           // ===============================
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Column(
               children: [
                 Container(
@@ -1962,14 +2262,15 @@ class APSevaluStaticPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.verified,
+                            const Icon(Icons.chat,
                                 color: Colors.white, size: 24),
                             const SizedBox(width: 10),
                             Flexible(
                               child: Text(
+                                // REMOVED THE WORD "OFFICIAL"
                                 isEng
-                                    ? "Official Govt WhatsApp"
-                                    : "ప్రభుత్వ వాట్సాప్ సేవలు",
+                                    ? "AP State WhatsApp"
+                                    : "ఏపీ పబ్లిక్ వాట్సాప్ సేవలు",
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -1993,8 +2294,8 @@ class APSevaluStaticPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     isEng
-                        ? "Reach Government services through WhatsApp. Click here."
-                        : "ప్రభుత్వ సేవలను వాట్సాప్ ద్వారా పొందండి. ఇక్కడ క్లిక్ చేయండి.",
+                        ? "Reach state services through WhatsApp."
+                        : "ప్రభుత్వ సేవలను వాట్సాప్ ద్వారా పొందండి.",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
@@ -2011,7 +2312,7 @@ class APSevaluStaticPage extends StatelessWidget {
           // ===============================
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               itemCount: services.length,
               itemBuilder: (context, index) {
                 final service = services[index];
@@ -2264,6 +2565,7 @@ class _AddListingPageState extends State<AddListingPage> {
     }
   }
 
+  // 🔥 UPGRADED: SMART ROUTING LOGIC (Transliterate vs Translate vs Skip)
   Future<void> _processSubmission() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (selectedCat == "Movies") {
@@ -2276,12 +2578,11 @@ class _AddListingPageState extends State<AddListingPage> {
         "USER_${DateTime.now().millisecondsSinceEpoch}";
     await prefs.setString('user_device_id', devId);
 
+    List<String> lbls = categoryLabels[selectedCat] ?? [];
     double parsedPrice = 0.0;
 
-    // Dynamically find the price based on the labels for this specific category
-    List<String> currentLabels = categoryLabels[selectedCat] ?? [];
-    for (int i = 0; i < currentLabels.length; i++) {
-      String label = currentLabels[i].toLowerCase();
+    for (int i = 0; i < lbls.length; i++) {
+      String label = lbls[i].toLowerCase();
       if (label.contains("price") ||
           label.contains("rent") ||
           label.contains("charges") ||
@@ -2294,19 +2595,65 @@ class _AddListingPageState extends State<AddListingPage> {
       }
     }
 
-    // STRICT MAPPING:
-    // f1: Name, f2: Phone, f3: Crop, f4: Desc, f5: Price, f6: Location
     Map<String, String> fields = {
-      'f1': controllers['f1']!.text.trim(), // Title / Name
-      'f2': controllers['f2']!.text.trim(), // Phone
-      'f3': controllers['f3']!.text.trim(), // Secondary Info
-      'f4': controllers['f4']!.text.trim(), // Description
-      'f5': controllers['f5']!.text.trim(), // Price
-      'f6': controllers['f6']!.text.trim(), // Location
+      'f1': controllers['f1']!.text.trim(),
+      'f2': controllers['f2']!.text.trim(),
+      'f3': controllers['f3']!.text.trim(),
+      'f4': controllers['f4']!.text.trim(),
+      'f5': controllers['f5']!.text.trim(),
+      'f6': controllers['f6']!.text.trim(),
     };
 
-    Map<String, String> trans =
-        await translationService.translateAllFields(fields, true);
+    Map<String, String> finalEn = {};
+    Map<String, String> finalTe = {};
+
+    // SMART ROUTING: Decides whether to Translate, Transliterate, or Skip!
+    for (int i = 0; i < 6; i++) {
+      String key = 'f${i + 1}';
+      String rawText = fields[key] ?? "";
+      String label = (i < lbls.length) ? lbls[i].toLowerCase() : "";
+
+      // 🚫 SKIP: Numbers, Codes, and strict fields
+      bool isSkip = label.contains("phone") ||
+          label.contains("price") ||
+          label.contains("rent") ||
+          label.contains("salary") ||
+          label.contains("fee") ||
+          label.contains("charges") ||
+          label.contains("blood group") ||
+          label.contains("rate");
+
+      // 🔥 TRANSLITERATE (Sound it out): Names (except Crop), Places, Brands, Models
+      bool isTransliterate =
+          (label.contains("name") && !label.contains("crop")) ||
+              label.contains("person") ||
+              label.contains("hospital") ||
+              label.contains("company") ||
+              label.contains("title") ||
+              label.contains("location") ||
+              label.contains("model");
+
+      if (rawText.isEmpty || isSkip) {
+        finalEn[key] = rawText;
+        finalTe[key] = rawText;
+      } else {
+        bool isInputTe = translationService.isTelugu(rawText);
+        if (isInputTe) {
+          finalTe[key] = rawText;
+          finalEn[key] = toTitleCase(
+              await translationService.translateText(rawText, 'en'));
+        } else {
+          finalEn[key] = toTitleCase(rawText);
+          if (isTransliterate) {
+            finalTe[key] =
+                await translationService.transliterateToTelugu(rawText);
+          } else {
+            finalTe[key] =
+                await translationService.translateText(rawText, 'te');
+          }
+        }
+      }
+    }
 
     String uEn = "";
     String uTe = "";
@@ -2326,40 +2673,32 @@ class _AddListingPageState extends State<AddListingPage> {
       category: selectedCat,
       subCategory: selectedSubCategory ?? "Others",
       ownerId: devId,
-
-      f1En: trans['f1_en'] ?? "",
-      f1Te: trans['f1_te'] ?? "",
-      f2En: fields['f2'] ?? "",
-      f2Te: fields['f2'] ?? "",
-      f3En: trans['f3_en'] ?? "",
-      f3Te: trans['f3_te'] ?? "",
-      f4En: trans['f4_en'] ?? "", // Description
-      f4Te: trans['f4_te'] ?? "",
-
-      f5En: fields['f5'] ?? "", // Price
-      f5Te: fields['f5'] ?? "",
-
-      f6En: trans['f6_en'] ?? "", // Location
-      f6Te: trans['f6_te'] ?? "",
-
+      f1En: finalEn['f1']!,
+      f1Te: finalTe['f1']!,
+      f2En: finalEn['f2']!,
+      f2Te: finalTe['f2']!,
+      f3En: finalEn['f3']!,
+      f3Te: finalTe['f3']!,
+      f4En: finalEn['f4']!,
+      f4Te: finalTe['f4']!,
+      f5En: finalEn['f5']!,
+      f5Te: finalTe['f5']!,
+      f6En: finalEn['f6']!,
+      f6Te: finalTe['f6']!,
       price: parsedPrice,
       priceUnitEn: uEn,
       priceUnitTe: uTe,
-
-      locationEn: trans['f6_en'] ?? "",
-      locationTe: trans['f6_te'] ?? "",
-      descEn: trans['f4_en'] ?? "",
-      descTe: trans['f4_te'] ?? "",
-
-      // 👇 THIS IS THE IMPORTANT PART
+      locationEn: finalEn['f6']!,
+      locationTe: finalTe['f6']!,
+      descEn: finalEn['f4']!,
+      descTe: finalTe['f4']!,
       emoji: getFinalEmoji(
-        fields['f1'] ?? "",
+        fields['f1']!,
         selectedSubCategory ?? "Others",
         selectedCat,
-        fields['f4'] ?? "",
-        fields['f3'] ?? "",
+        fields['f4']!,
+        fields['f3']!,
       ),
-
       status: "pending",
     ));
   }
@@ -2392,7 +2731,7 @@ class _AddListingPageState extends State<AddListingPage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(children: [
                   DropdownButtonFormField<String>(
-                      value: selectedCat,
+                      initialValue: selectedCat,
                       items: categoryMap.keys
                           .where((k) =>
                               k != "Emergency" &&
@@ -2414,7 +2753,7 @@ class _AddListingPageState extends State<AddListingPage> {
                   if (subCats.isNotEmpty) ...[
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
-                        value: selectedSubCategory,
+                        initialValue: selectedSubCategory,
                         items: subCats
                             .map((sub) =>
                                 DropdownMenuItem(value: sub, child: Text(sub)))
@@ -2511,10 +2850,10 @@ class ListingPage extends StatefulWidget {
   final String? subCategory;
 
   const ListingPage({
-    Key? key,
+    super.key,
     required this.categoryTitle,
     this.subCategory,
-  }) : super(key: key);
+  });
 
   @override
   State<ListingPage> createState() => _ListingPageState();
@@ -2647,8 +2986,9 @@ class _ListingPageState extends State<ListingPage> {
               if (isMovies) {
                 displayMainTitle = isEng ? l.f2En : l.f2Te; // Movie Name
                 displaySubTitle = isEng ? l.f1En : l.f1Te; // Theater Name
-                if (displayMainTitle.isEmpty)
+                if (displayMainTitle.isEmpty) {
                   displayMainTitle = displaySubTitle;
+                }
               }
 
               String displayPrice =
@@ -2886,71 +3226,287 @@ class _ListingPageState extends State<ListingPage> {
 }
 
 // ==================================================
-// 13. MY LISTINGS PAGE (CLEAN CARDS)
+// 13. USER PROFILE (MY SERVICES & CONTACT ADMIN TABS)
 // ==================================================
 class MyListingsPage extends StatefulWidget {
-  const MyListingsPage({Key? key}) : super(key: key);
+  const MyListingsPage({super.key});
   @override
   State<MyListingsPage> createState() => _MyListingsPageState();
 }
 
 class _MyListingsPageState extends State<MyListingsPage> {
+  int selectedTab = 0; // 0 = My Services, 1 = Contact Admin
+
+  // --- Contact Admin State Variables ---
+  final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _phoneCtrl = TextEditingController();
+  final TextEditingController _reasonCtrl = TextEditingController();
+  bool _isSending = false;
+  bool _sent = false;
+
+  Future<void> _sendMessage() async {
+    bool isEng = currentLanguage == "English";
+    if (_nameCtrl.text.isEmpty ||
+        _phoneCtrl.text.isEmpty ||
+        _reasonCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              isEng ? "All fields required" : "అన్ని ఫీల్డ్స్ తప్పనిసరి")));
+      return;
+    }
+    setState(() => _isSending = true);
+    await FirebaseFirestore.instance.collection('contact_messages').add({
+      'userName': _nameCtrl.text,
+      'userPhone': _phoneCtrl.text,
+      'message': _reasonCtrl.text,
+      'type': 'general',
+      'timestamp': FieldValue.serverTimestamp(),
+      'status': 'pending'
+    });
+    setState(() {
+      _isSending = false;
+      _sent = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isEng = currentLanguage == "English";
     return Scaffold(
-      appBar: AppBar(title: Text(isEng ? "My Services" : "నా సేవలు")),
-      body: FutureBuilder<String>(
-        future: SharedPreferences.getInstance()
-            .then((p) => p.getString('user_device_id') ?? ""),
-        builder: (context, idSnap) {
-          if (!idSnap.hasData)
-            return const Center(child: CircularProgressIndicator());
-          return StreamBuilder<List<Listing>>(
-            stream: firebaseService.getMyListings(idSnap.data!),
-            builder: (context, snap) {
-              if (!snap.hasData)
-                return const Center(child: CircularProgressIndicator());
-              if (snap.data!.isEmpty)
-                return Center(
-                    child: Text(isEng ? "No Services Added." : "సేవలు లేవు."));
-              return ListView.builder(
-                itemCount: snap.data!.length,
-                itemBuilder: (context, i) {
-                  final l = snap.data![i];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      title: Text(isEng ? l.f1En : l.f1Te,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("${l.category} (${l.status})"),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => AddListingPage(
-                                          autoSubCat: l.subCategory)))),
-                          IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  firebaseService.deleteListing(l.id)),
-                        ],
-                      ),
+      appBar: AppBar(
+        title: Text(isEng ? "User Profile" : "వినియోగదారు ప్రొఫైల్"),
+        backgroundColor: const Color(0xFF673AB7),
+        foregroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          // 🔥 TAB HEADER (Matching Admin Panel Style)
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)
+            ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildTabIcon(
+                    Icons.list_alt, isEng ? "My Services" : "నా సేవలు", 0),
+                _buildTabIcon(Icons.support_agent,
+                    isEng ? "Contact Admin" : "అడ్మిన్‌ కు మెసేజ్", 1),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+
+          // 🔥 TAB BODY CONTENT
+          Expanded(
+            child: selectedTab == 0
+                ? _buildMyServicesSection(isEng)
+                : _buildContactAdminSection(isEng),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= TAB ICON BUILDER =================
+  Widget _buildTabIcon(IconData icon, String label, int index) {
+    bool isSelected = selectedTab == index;
+    return GestureDetector(
+      onTap: () => setState(() => selectedTab = index),
+      child: Column(
+        children: [
+          Icon(icon,
+              size: 32,
+              color: isSelected ? const Color(0xFF673AB7) : Colors.grey),
+          const SizedBox(height: 4),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? const Color(0xFF673AB7) : Colors.grey)),
+          if (isSelected)
+            Container(
+                margin: const EdgeInsets.only(top: 4),
+                height: 3,
+                width: 40,
+                color: const Color(0xFF673AB7))
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // TAB 1: MY SERVICES
+  // ==========================================
+  Widget _buildMyServicesSection(bool isEng) {
+    return FutureBuilder<String>(
+      future: SharedPreferences.getInstance()
+          .then((p) => p.getString('user_device_id') ?? ""),
+      builder: (context, idSnap) {
+        if (!idSnap.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return StreamBuilder<List<Listing>>(
+          stream: firebaseService.getMyListings(idSnap.data!),
+          builder: (context, snap) {
+            if (!snap.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snap.data!.isEmpty) {
+              return Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.folder_open_rounded,
+                      size: 80, color: Colors.grey.shade300),
+                  const SizedBox(height: 16),
+                  Text(
+                    isEng ? "No Services Added." : "సేవలు లేవు.",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade500),
+                  ),
+                ],
+              ));
+            }
+            return ListView.builder(
+              itemCount: snap.data!.length,
+              itemBuilder: (context, i) {
+                final l = snap.data![i];
+                // 🔥 Capitalize the title to match the rest of the app
+                String displayTitle = toTitleCase(isEng ? l.f1En : l.f1Te);
+
+                return Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    title: Text(displayTitle,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text("${l.category} (${l.status})"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => AddListingPage(
+                                        autoSubCat: l.subCategory)))),
+                        IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () =>
+                                firebaseService.deleteListing(l.id)),
+                      ],
                     ),
-                  );
-                },
-              );
-            },
-          );
-        },
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================
+  // TAB 2: CONTACT ADMIN
+  // ==========================================
+  Widget _buildContactAdminSection(bool isEng) {
+    if (_sent) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green, size: 60),
+            const SizedBox(height: 20),
+            Text(
+              isEng
+                  ? "Message sent successfully!"
+                  : "సందేశం విజయవంతంగా పంపబడింది!",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _sent = false;
+                  _nameCtrl.clear();
+                  _phoneCtrl.clear();
+                  _reasonCtrl.clear();
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF673AB7)),
+              child: Text(isEng ? "Send Another" : "మరొకటి పంపండి",
+                  style: const TextStyle(color: Colors.white)),
+            )
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          TextField(
+            controller: _nameCtrl,
+            decoration: InputDecoration(
+              labelText: isEng ? "Your Name" : "మీ పేరు",
+              border: const OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+            ),
+          ),
+          const SizedBox(height: 15),
+          TextField(
+            controller: _phoneCtrl,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              labelText: isEng ? "Phone Number" : "ఫోన్ నంబర్",
+              border: const OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+            ),
+          ),
+          const SizedBox(height: 15),
+          TextField(
+            controller: _reasonCtrl,
+            maxLines: 5,
+            decoration: InputDecoration(
+              labelText: isEng ? "Contact For" : "సంప్రదించడానికి కారణం",
+              border: const OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+            ),
+          ),
+          const SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: _isSending ? null : _sendMessage,
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 55),
+              backgroundColor: const Color(0xFF673AB7),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            child: _isSending
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                    isEng ? "SUBMIT" : "సబ్మిట్ చేయండి",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -3333,10 +3889,12 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
           .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, snap) {
-        if (!snap.hasData)
+        if (!snap.hasData) {
           return const Center(child: CircularProgressIndicator());
-        if (snap.data!.docs.isEmpty)
+        }
+        if (snap.data!.docs.isEmpty) {
           return const Center(child: Text("No messages."));
+        }
         return ListView.builder(
           padding: const EdgeInsets.all(10),
           itemCount: snap.data!.docs.length,
@@ -3370,8 +3928,9 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
           .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, snap) {
-        if (!snap.hasData)
+        if (!snap.hasData) {
           return const Center(child: CircularProgressIndicator());
+        }
 
         final docs = snap.data!.docs;
 
@@ -3382,7 +3941,7 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
             final l = Listing.fromFirestore(
                 docs[i].data() as Map<String, dynamic>, docs[i].id);
 
-            bool isPending = l.status?.toLowerCase() == "pending";
+            bool isPending = l.status.toLowerCase() == "pending";
 
             return Card(
               color: isPending ? Colors.orange.shade50 : Colors.white,
@@ -3416,102 +3975,91 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
                         Text("Description (f4): ${l.f4En}"),
 
                         const SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        // 🔥 RESPONSIVE WRAP: Fixes all small screen overflow issues!
+                        Wrap(
+                          alignment: WrapAlignment.end,
+                          spacing: 0, // Horizontal space between buttons
+                          runSpacing:
+                              4, // Vertical space if pushed to next line
                           children: [
-                            // ✅ APPROVE BUTTON (Only if not already approved)
+                            // ✅ APPROVE BUTTON
                             if (l.status.toLowerCase() != 'approved')
                               IconButton(
-                                icon: const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                  size: 28,
-                                ),
+                                icon: const Icon(Icons.check_circle,
+                                    color: Colors.green, size: 26),
+                                constraints:
+                                    const BoxConstraints(), // Reduces padding footprint
+                                padding: const EdgeInsets.all(8),
                                 onPressed: () async {
                                   await FirebaseFirestore.instance
                                       .collection('listings')
                                       .doc(l.id)
                                       .update({'status': 'approved'});
-
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Approved successfully"),
-                                    ),
-                                  );
+                                      const SnackBar(
+                                          content:
+                                              Text("Approved successfully")));
                                 },
                               ),
 
-                            const SizedBox(width: 8),
-
-                            // ❌ REJECT BUTTON (Only if not already rejected)
+                            // ❌ REJECT BUTTON
                             if (l.status.toLowerCase() != 'rejected')
                               IconButton(
-                                icon: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.orange,
-                                  size: 28,
-                                ),
+                                icon: const Icon(Icons.cancel,
+                                    color: Colors.orange, size: 26),
+                                constraints: const BoxConstraints(),
+                                padding: const EdgeInsets.all(8),
                                 onPressed: () async {
                                   await FirebaseFirestore.instance
                                       .collection('listings')
                                       .doc(l.id)
                                       .update({'status': 'rejected'});
-
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Rejected successfully"),
-                                    ),
-                                  );
+                                      const SnackBar(
+                                          content:
+                                              Text("Rejected successfully")));
                                 },
                               ),
-
-                            const SizedBox(width: 8),
 
                             // 📌 PIN / UNPIN BUTTON
                             IconButton(
                               icon: Icon(
-                                l.isPinned
-                                    ? Icons.push_pin
-                                    : Icons.push_pin_outlined,
-                                color: l.isPinned ? Colors.orange : Colors.grey,
-                              ),
+                                  l.isPinned
+                                      ? Icons.push_pin
+                                      : Icons.push_pin_outlined,
+                                  color:
+                                      l.isPinned ? Colors.orange : Colors.grey,
+                                  size: 24),
+                              constraints: const BoxConstraints(),
+                              padding: const EdgeInsets.all(8),
                               onPressed: () async {
                                 await FirebaseFirestore.instance
                                     .collection('listings')
                                     .doc(l.id)
                                     .update({'isPinned': !l.isPinned});
-
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      l.isPinned
-                                          ? "Unpinned successfully"
-                                          : "Pinned successfully",
-                                    ),
-                                  ),
-                                );
+                                    SnackBar(
+                                        content: Text(l.isPinned
+                                            ? "Unpinned successfully"
+                                            : "Pinned successfully")));
                               },
                             ),
 
-                            const SizedBox(width: 8),
-
-                            // ✏ EDIT BUTTON
+                            // ✏ EDIT BUTTON (OPENS UPGRADED DIALOG)
                             IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.purple,
-                              ),
+                              icon: const Icon(Icons.edit,
+                                  color: Colors.purple, size: 24),
+                              constraints: const BoxConstraints(),
+                              padding: const EdgeInsets.all(8),
                               onPressed: () => _showFullEdit(l),
                             ),
 
-                            const SizedBox(width: 8),
-
                             // 🗑 DELETE BUTTON
                             IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
+                              icon: const Icon(Icons.delete,
+                                  color: Colors.red, size: 24),
+                              constraints: const BoxConstraints(),
+                              padding: const EdgeInsets.all(8),
                               onPressed: () => docs[i].reference.delete(),
                             ),
                           ],
@@ -3529,14 +4077,12 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
   }
 
   // ==================================================
-  // FULL EDIT DIALOG (FULLY DYNAMIC)
+  // 🔥 UPGRADED FULL EDIT DIALOG (WITH EMOJI EDITOR + MAGIC TRANSLATE)
   // ==================================================
   void _showFullEdit(Listing l) {
-    // 1. Fetch the exact labels for this specific category
     List<String> labelsEn = categoryLabels[l.category] ?? [];
     List<String> labelsTe = categoryLabelsTe[l.category] ?? [];
 
-    // 2. Safely map database values to controllers (Always 6 fields in DB)
     List<TextEditingController> enControllers = [
       TextEditingController(text: l.f1En),
       TextEditingController(text: l.f2En),
@@ -3545,7 +4091,6 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
       TextEditingController(text: l.f5En),
       TextEditingController(text: l.f6En),
     ];
-
     List<TextEditingController> teControllers = [
       TextEditingController(text: l.f1Te),
       TextEditingController(text: l.f2Te),
@@ -3555,42 +4100,114 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
       TextEditingController(text: l.f6Te),
     ];
 
+    // 🔥 NEW: EMOJI TEXT CONTROLLER
+    TextEditingController emojiController =
+        TextEditingController(text: l.emoji ?? "📂");
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        scrollable: true, // 🔥 THIS FIXES THE KEYBOARD OVERFLOW
         title: Text("Edit: ${l.category}"),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            // 3. Dynamically generate ONLY the text fields this category uses
-            children: List.generate(labelsEn.length, (i) {
-              String labelTitle = labelsEn[i];
-              if (labelsTe.length > i) {
-                labelTitle +=
-                    " / ${labelsTe[i]}"; // Show both languages in label
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ==========================================================
+              // 🔥 NEW: ADMIN EMOJI EDITOR (Cleaned UI)
+              // ==========================================================
+              Row(
                 children: [
-                  Text(labelTitle,
-                      style: const TextStyle(
+                  const Text("Emoji:",
+                      style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF673AB7))),
-                  const SizedBox(height: 5),
-                  TextField(
-                      controller: enControllers[i],
+                  const SizedBox(width: 15),
+                  SizedBox(
+                    width: 70,
+                    child: TextField(
+                      controller: emojiController,
+                      style: const TextStyle(fontSize: 28),
+                      textAlign: TextAlign.center,
                       decoration: const InputDecoration(
-                          hintText: "English", border: OutlineInputBorder())),
-                  const SizedBox(height: 5),
-                  TextField(
-                      controller: teControllers[i],
-                      decoration: const InputDecoration(
-                          hintText: "తెలుగు", border: OutlineInputBorder())),
-                  const Divider(height: 25),
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      ),
+                    ),
+                  ),
                 ],
-              );
-            }),
+              ),
+              const Divider(height: 25),
+
+              // ==========================================================
+              // TEXT FIELDS (WITH 1-CLICK MAGIC BUTTON)
+              // ==========================================================
+              ...List.generate(labelsEn.length, (i) {
+                String labelTitle = labelsEn[i];
+                if (labelsTe.length > i) labelTitle += " / ${labelsTe[i]}";
+
+                String safeLabel = labelsEn[i].toLowerCase();
+
+                // Apply the exact smart rules to the Magic Button!
+                bool isTransliterate = (safeLabel.contains("name") &&
+                        !safeLabel.contains("crop")) ||
+                    safeLabel.contains("person") ||
+                    safeLabel.contains("hospital") ||
+                    safeLabel.contains("company") ||
+                    safeLabel.contains("title") ||
+                    safeLabel.contains("location") ||
+                    safeLabel.contains("model");
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(labelTitle,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF673AB7))),
+                    const SizedBox(height: 5),
+                    TextField(
+                        controller: enControllers[i],
+                        decoration: const InputDecoration(
+                            hintText: "English", border: OutlineInputBorder())),
+                    const SizedBox(height: 5),
+
+                    // 🔥 TELUGU TEXT BOX WITH MAGIC TRANSLATE BUTTON
+                    TextField(
+                      controller: teControllers[i],
+                      decoration: InputDecoration(
+                        hintText: "తెలుగు",
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.g_translate,
+                              color: Color(0xFF673AB7)),
+                          tooltip: "Translate/Transliterate",
+                          onPressed: () async {
+                            String enText = enControllers[i].text.trim();
+                            if (enText.isNotEmpty) {
+                              ScaffoldMessenger.of(ctx).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Processing..."),
+                                      duration: Duration(milliseconds: 700)));
+
+                              // 🔥 SMART ROUTING IN ADMIN PANEL
+                              String result = isTransliterate
+                                  ? await translationService
+                                      .transliterateToTelugu(enText)
+                                  : await translationService.translateText(
+                                      enText, 'te');
+
+                              teControllers[i].text = result;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 25),
+                  ],
+                );
+              })
+            ],
           ),
         ),
         actions: [
@@ -3601,24 +4218,72 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
                 backgroundColor: const Color(0xFF673AB7),
                 foregroundColor: Colors.white),
             onPressed: () async {
-              // 4. Safely update Emoji based on the newly edited text
-              String newEmoji = getFinalEmoji(
-                enControllers[0].text.trim(), // f1
-                l.subCategory ?? "", // subCategory
-                l.category, // category
-                enControllers[3].text.trim(), // f4 (description)
-                enControllers[2].text.trim(), // f3 (crop/service type)
-              );
+              final messenger = ScaffoldMessenger.of(context);
+              Navigator.pop(ctx);
+              messenger.showSnackBar(SnackBar(
+                  content: const Text("Saving updates..."),
+                  backgroundColor: Colors.blue.shade700,
+                  duration: const Duration(seconds: 1)));
 
-              // 🔥 Clean commas from price if the admin added them
+              for (int i = 0; i < 6; i++) {
+                String enText = enControllers[i].text.trim();
+                String teText = teControllers[i].text.trim();
+                String label =
+                    (labelsEn.length > i) ? labelsEn[i].toLowerCase() : "";
+
+                bool isSkip = label.contains("phone") ||
+                    label.contains("price") ||
+                    label.contains("rent") ||
+                    label.contains("salary") ||
+                    label.contains("fee") ||
+                    label.contains("charges") ||
+                    label.contains("blood group") ||
+                    label.contains("rate");
+
+                bool isTransliterate =
+                    (label.contains("name") && !label.contains("crop")) ||
+                        label.contains("person") ||
+                        label.contains("hospital") ||
+                        label.contains("company") ||
+                        label.contains("title") ||
+                        label.contains("location") ||
+                        label.contains("model");
+
+                if (!isSkip) {
+                  if (enText.isNotEmpty && teText.isEmpty) {
+                    teText = isTransliterate
+                        ? await translationService.transliterateToTelugu(enText)
+                        : await translationService.translateText(enText, 'te');
+                  } else if (teText.isNotEmpty && enText.isEmpty) {
+                    enText =
+                        await translationService.translateText(teText, 'en');
+                  }
+
+                  enControllers[i].text = toTitleCase(enText);
+
+                  if (!RegExp(r'[\u0C00-\u0C7F]').hasMatch(teText)) {
+                    teControllers[i].text = toTitleCase(teText);
+                  } else {
+                    teControllers[i].text = teText;
+                  }
+                }
+              }
+
+              // 🔥 Use Admin's manually selected Emoji. If empty, generate a fallback.
+              String finalEmoji = emojiController.text.trim();
+              if (finalEmoji.isEmpty) {
+                finalEmoji = getFinalEmoji(
+                    enControllers[0].text.trim(),
+                    l.subCategory ?? "",
+                    l.category,
+                    enControllers[3].text.trim(),
+                    enControllers[2].text.trim());
+              }
+
               String rawPrice =
                   enControllers[4].text.trim().replaceAll(",", "");
               double parsedPrice = double.tryParse(rawPrice) ?? 0.0;
 
-              // 🔥 Capture the messenger before popping the dialog
-              final messenger = ScaffoldMessenger.of(context);
-
-              // 5. Save back to Firebase
               await FirebaseFirestore.instance
                   .collection('listings')
                   .doc(l.id)
@@ -3635,22 +4300,15 @@ class _AdminApprovalPageState extends State<AdminApprovalPage> {
                 'f5_te': teControllers[4].text.trim(),
                 'f6_en': enControllers[5].text.trim(),
                 'f6_te': teControllers[5].text.trim(),
-                'emoji': newEmoji,
-                'price':
-                    parsedPrice, // 🔥 Updates numeric price for correct filtering
+                'emoji': finalEmoji,
+                'price': parsedPrice,
               });
 
-              Navigator.pop(ctx); // Closes the dialog
-
-              // 🔥 Admin visual feedback
-              messenger.showSnackBar(
-                const SnackBar(
+              messenger.showSnackBar(const SnackBar(
                   content: Text("Listing updated successfully!",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.white)),
-                  backgroundColor: Colors.green,
-                ),
-              );
+                  backgroundColor: Colors.green));
             },
             child: const Text("Save Updates"),
           )

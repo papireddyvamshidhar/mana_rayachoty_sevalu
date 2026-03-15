@@ -1,4 +1,4 @@
-package com.example.mana_rayachoty_sevalu
+package com.rayachoty.sevalu
 
 import io.flutter.embedding.android.FlutterActivity
 

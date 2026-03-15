@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:translator/translator.dart';
 
@@ -6,6 +8,25 @@ class TranslationService {
 
   // Manual Dictionary Map for specific overrides (Priority 1)
   final Map<String, String> manualDictionary = {
+    // 🔥 CRITICAL OVERRIDES (Fixes literal dictionary translations)
+    "swift": "స్విఫ్ట్",
+    "mess": "మెస్",
+    "tcs": "టీసీఎస్",
+    "ravi": "రవి",
+    "apple": "యాపిల్",
+    "medicals": "మెడికల్స్",
+    "hospital": "హాస్పిటల్",
+    "clinic": "క్లినిక్",
+    "abhiruchi": "అభిరుచి",
+    "amaravathi": "అమరావతి",
+    "gowtham cinemas": "గౌతమ్ సినిమాస్",
+    "prasad": "ప్రసాద్",
+    "hero": "హీరో",
+    "honda": "హోండా",
+    "tvs": "టీవీఎస్",
+    "bajaj": "బజాజ్",
+
+    // Original Safe Overrides
     "rayachoty": "రాయచోటి",
     "rayachoti": "రాయచోటి",
     "kadapa": "కడప",
@@ -20,6 +41,7 @@ class TranslationService {
     "potato": "బంగాళదుంప",
     "plumber": "ప్లంబర్",
     "Add Your Service": "మీ సేవను జోడించండి",
+
     // ULTRA LOCK: Injected Subcategory Dictionary
     "house rentals": "ఇల్లు అద్దెకు",
     "commercial rentals": "కమర్షియల్ అద్దె",
@@ -41,6 +63,7 @@ class TranslationService {
     "other": "ఇతర",
     "all": "అన్నీ",
     "user": "వినియోగదారు",
+
     // ADDITIONAL EMOJI MAPPINGS FOR SUBCATEGORIES
     "Fruits": "🍎 పండ్లు",
     "Vegetables": "🥕 కూరగాయలు",
@@ -161,6 +184,52 @@ class TranslationService {
       }
     }
     return null;
+  }
+
+  // ==========================================================
+  // 🔥 NEW: TRANSLITERATION ENGINE (Sounds out words perfectly)
+  // ==========================================================
+  Future<String> transliterateToTelugu(String text) async {
+    final words = text.trim().split(' ');
+    List<String> resultWords = [];
+
+    for (var word in words) {
+      if (word.isEmpty) continue;
+
+      // If it's already Telugu or just numbers/symbols, leave it alone
+      if (RegExp(r'[\u0C00-\u0C7F0-9\+\-\.,₹]').hasMatch(word)) {
+        resultWords.add(word);
+        continue;
+      }
+
+      // Check manual dictionary first!
+      String? manualOverride = _lookupManual(word, 'te');
+      if (manualOverride != null) {
+        resultWords.add(manualOverride);
+        continue;
+      }
+
+      try {
+        final url = Uri.parse(
+            "https://inputtools.google.com/request?text=${Uri.encodeComponent(word)}&itc=te-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8&app=test");
+        final request = await HttpClient().getUrl(url);
+        final response = await request.close();
+        if (response.statusCode == 200) {
+          final responseBody = await response.transform(utf8.decoder).join();
+          final json = jsonDecode(responseBody);
+          if (json[0] == "SUCCESS" && (json[1] as List).isNotEmpty) {
+            resultWords.add(json[1][0][1][0].toString());
+          } else {
+            resultWords.add(word); // fallback
+          }
+        } else {
+          resultWords.add(word);
+        }
+      } catch (e) {
+        resultWords.add(word); // fallback on network error
+      }
+    }
+    return resultWords.join(' ');
   }
 
   /// Enhanced translation logic with specific rule handling (Stage 2)
